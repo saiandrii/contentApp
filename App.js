@@ -1,20 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, View } from "react-native";
+import { AppProvider, ContentContext } from "./AppContext";
+import AddItemButton from "./components/AddItemButton";
+import StackNavigator from "./StackNavigator";
+import { colors } from "./misc";
+import { useContext } from "react";
+import * as NavigationBar from "expo-navigation-bar";
+import AddItemModal from "../contentapp/components/AddItemModal";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <AppProvider>
+        <StatusBar backgroundColor={colors.outline} />
+
+        <StackNavigator />
+        <View
+          style={{
+            flex: 1,
+            height: "100%",
+            width: "100%",
+
+            position: "absolute",
+            justifyContent: "flex-end",
+            alignItems: "flex-end",
+            padding: 20,
+          }}
+        >
+          <AddItemButton />
+          <AddItemModal />
+        </View>
+      </AppProvider>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
