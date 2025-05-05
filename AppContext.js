@@ -11,8 +11,10 @@ const AppProvider = ({ children }) => {
   const [buttonVisible, setButtonVisible] = useState("flex");
   const [musicItem, setMusicItem] = useState([]);
   const [bookItem, setBookItem] = useState([]);
+  const [bookItemData, setBookItemData] = useState([]);
   const [handleSend, setHandleSend] = useState(false);
   const [sorted, setSorted] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [activeState, setActiveState] = useState();
   const [filtered, setFiltered] = useState("");
 
@@ -41,6 +43,10 @@ const AppProvider = ({ children }) => {
         setActiveState,
         filtered,
         setFiltered,
+        editModal,
+        setEditModal,
+        bookItemData,
+        setBookItemData,
       }}
     >
       {children}

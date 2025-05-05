@@ -32,6 +32,8 @@ import BooksItem from "../components/BooksComponents/BooksItem";
 import Popup from "../components/Popup";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { debounce, filter } from "lodash";
+import BookEditModal from "../components/BooksComponents/BookModal/BookEditModal";
+import BookModalAdditem from "../components/BooksComponents/BookModal/BookModalAdditem";
 
 const Books = ({ navigation }) => {
   const { buttonVisible, setButtonVisible } = useContext(ContentContext);
@@ -39,7 +41,10 @@ const Books = ({ navigation }) => {
   const { sorted, setSorted } = useContext(ContentContext);
   const { bookItem, setBookItem } = useContext(ContentContext);
   const { filtered, setFiltered } = useContext(ContentContext);
+  const { editModal, setEditModal } = useContext(ContentContext);
+
   const [scrolled, setScrolled] = useState(true);
+  const [itemData, setItemData] = useState();
   const [filteredArray, setFilteredArray] = useState([]);
   const [searchPressed, setSearchPressed] = useState(false);
 
@@ -80,16 +85,27 @@ const Books = ({ navigation }) => {
   }, []);
 
   const filteredBooks = bookItem.filter((element) => {
+    const stringElement = element?.name.toLowerCase().replaceAll(" ", "");
+
+    const stringElementAuthor = element?.author
+      .toLowerCase()
+      .replaceAll(" ", "");
+
+    const filterElement = filtered?.toLowerCase().replaceAll(" ", "");
+
     const newItems =
-      element?.name.toLowerCase().replaceAll(" ", "") ===
-        filtered.toLowerCase().replaceAll(" ", "") ||
-      element?.author.toLowerCase().replaceAll(" ", "") ===
-        filtered.toLowerCase().replaceAll(" ", "");
+      stringElement?.includes(filterElement) ||
+      stringElementAuthor?.includes(filterElement);
+
     return newItems;
   });
 
   useEffect(() => {
-    setFilteredArray(filteredBooks);
+    if (filtered.length === 0) {
+      setFilteredArray([]);
+    } else {
+      setFilteredArray(filteredBooks);
+    }
   }, [filtered]);
 
   const fadeAnim = useAnimatedValue(scrolled ? 50 : 0);
@@ -97,7 +113,7 @@ const Books = ({ navigation }) => {
   const animation = () => {
     Animated.timing(fadeAnim, {
       toValue: scrolled ? 50 : 0,
-      duration: scrolled ? 50 : 50,
+      duration: scrolled ? 30 : 30,
       useNativeDriver: false,
     }).start();
   };
@@ -217,7 +233,7 @@ const Books = ({ navigation }) => {
             setButtonVisible("none");
             setScrolled(false);
             animation();
-          } else if (currentOffset <= 200) {
+          } else if (currentOffset <= 300) {
             setSorted(false);
 
             setButtonVisible();
@@ -227,6 +243,7 @@ const Books = ({ navigation }) => {
         }}
         scrollEventThrottle={1}
       />
+      {editModal === true ? <BookModalAdditem /> : null}
     </View>
   );
 };

@@ -40,7 +40,7 @@ const Popup = () => {
         >
           <TouchableOpacity
             onPress={() => (
-              sortByName(bookItem, "bookItem", setBookItem), setSorted(false)
+              sortByName(bookItem, setBookItem), setSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -58,7 +58,7 @@ const Popup = () => {
 
           <TouchableOpacity
             onPress={() => (
-              sortByRating(bookItem, "bookItem", setBookItem), setSorted(false)
+              sortByRating(bookItem, setBookItem), setSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -76,7 +76,7 @@ const Popup = () => {
 
           <TouchableOpacity
             onPress={() => (
-              sortByFinish(bookItem, "bookItem", setBookItem), setSorted(false)
+              sortByFinish(bookItem, setBookItem), setSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -93,7 +93,7 @@ const Popup = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => (
-              sortByStart(bookItem, "bookItem", setBookItem), setSorted(false)
+              sortByStart(bookItem, setBookItem), setSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -110,7 +110,7 @@ const Popup = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => (
-              sortByPages(bookItem, "bookItem", setBookItem), setSorted(false)
+              sortByPages(bookItem, setBookItem), setSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >

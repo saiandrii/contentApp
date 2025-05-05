@@ -21,12 +21,16 @@ import { colors } from "../../../misc";
 import { ContentContext } from "../../../AppContext";
 import { useIsFocused } from "@react-navigation/native";
 import { debounce } from "lodash";
+import BookEditModal from "../BookModal/BookEditModal";
+import BookModalAdditem from "../BookModal/BookModalAdditem";
 
 const BooksList = ({ item, index }) => {
   const [itemPressed, setItemPressed] = useState(false);
   const [dots, setDots] = useState(false);
-  const { bookItem, setBookItem } = useContext(ContentContext);
   const [imageItem, setImageItem] = useState("");
+  const { editModal, setEditModal } = useContext(ContentContext);
+  const { bookItem, setBookItem } = useContext(ContentContext);
+  const { bookItemData, setBookItemData } = useContext(ContentContext);
   const { sorted, setSorted } = useContext(ContentContext);
   const { filtered, setFiltered } = useContext(ContentContext);
 
@@ -125,24 +129,28 @@ const BooksList = ({ item, index }) => {
               borderRadius: 5,
             }}
           >
-            {item?.finish == "Invalid Date" ? (
-              <TouchableOpacity
-                onPress={editData}
-                style={{ flexDirection: "row" }}
+            <TouchableOpacity
+              onPress={() => {
+                setEditModal(true), setDots(false), setBookItemData(item);
+              }}
+              style={{ flexDirection: "row" }}
+            >
+              <Feather name="edit" size={22} color="#eeeeee" />
+              <Text
+                onPress={() => {
+                  setEditModal(true);
+                }}
+                style={{
+                  fontSize: 18,
+                  color: "#eeeeee",
+                  paddingLeft: 10,
+                  paddingBottom: 20,
+                }}
               >
-                <Feather name="edit" size={22} color="#eeeeee" />
-                <Text
-                  style={{
-                    fontSize: 18,
-                    color: "#eeeeee",
-                    paddingLeft: 10,
-                    paddingBottom: 20,
-                  }}
-                >
-                  Finish
-                </Text>
-              </TouchableOpacity>
-            ) : null}
+                Edit
+              </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={{ flexDirection: "row" }}
               onPress={deleteData}
@@ -256,7 +264,7 @@ const BooksList = ({ item, index }) => {
               marginTop: 10,
               borderRadius: 5,
             }}
-          ></View>
+          />
         </View>
         <View style={styles.textView}>
           <Feather name="book-open" size={15} color="black" />

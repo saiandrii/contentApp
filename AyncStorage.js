@@ -18,7 +18,7 @@ export const getData = async (key) => {
   }
 };
 
-export const sortByRating = async (array, asyncStorage, setParsed) => {
+export const sortByRating = async (array, setParsed) => {
   try {
     const newItems = [...array].sort((a, b) => {
       if (a.number < b.number) {
@@ -30,16 +30,12 @@ export const sortByRating = async (array, asyncStorage, setParsed) => {
       return 0;
     });
 
-    const jsonValue = JSON.stringify(newItems);
-    await AsyncStorage.setItem(asyncStorage, jsonValue);
-    const itemData = await getData(asyncStorage);
-    const parsed = JSON.parse(itemData);
-    setParsed(parsed);
+    setParsed(newItems);
   } catch (e) {
     console.log(e);
   }
 };
-export const sortByName = async (array, asyncStorage, setParsed) => {
+export const sortByName = async (array, setParsed) => {
   try {
     const newItems = [...array].sort((a, b) => {
       if (a.name < b.name) {
@@ -51,16 +47,12 @@ export const sortByName = async (array, asyncStorage, setParsed) => {
       return 0;
     });
 
-    const jsonValue = JSON.stringify(newItems);
-    await AsyncStorage.setItem(asyncStorage, jsonValue);
-    const itemData = await getData(asyncStorage);
-    const parsed = JSON.parse(itemData);
-    setParsed(parsed);
+    setParsed(newItems);
   } catch (e) {
     console.log(e);
   }
 };
-export const sortByFinish = async (array, asyncStorage, setParsed) => {
+export const sortByFinish = async (array, setParsed) => {
   try {
     const newItems = [...array].sort((a, b) => {
       a = a.finish.slice(-4);
@@ -78,16 +70,12 @@ export const sortByFinish = async (array, asyncStorage, setParsed) => {
       return 0;
     });
 
-    const jsonValue = JSON.stringify(newItems);
-    await AsyncStorage.setItem(asyncStorage, jsonValue);
-    const itemData = await getData(asyncStorage);
-    const parsed = JSON.parse(itemData);
-    setParsed(parsed);
+    setParsed(newItems);
   } catch (e) {
     console.log(e);
   }
 };
-export const sortByStart = async (array, asyncStorage, setParsed) => {
+export const sortByStart = async (array, setParsed) => {
   try {
     const newItems = [...array].sort((a, b) => {
       a = a.start.slice(-4);
@@ -105,16 +93,12 @@ export const sortByStart = async (array, asyncStorage, setParsed) => {
       return 0;
     });
 
-    const jsonValue = JSON.stringify(newItems);
-    await AsyncStorage.setItem(asyncStorage, jsonValue);
-    const itemData = await getData(asyncStorage);
-    const parsed = JSON.parse(itemData);
-    setParsed(parsed);
+    setParsed(newItems);
   } catch (e) {
     console.log(e);
   }
 };
-export const sortByPages = async (array, asyncStorage, setParsed) => {
+export const sortByPages = async (array, setParsed) => {
   try {
     const newItems = [...array].sort((a, b) => {
       if (a.pages < b.pages) {
@@ -125,19 +109,6 @@ export const sortByPages = async (array, asyncStorage, setParsed) => {
       }
       return 0;
     });
-
-    const jsonValue = JSON.stringify(newItems);
-    await AsyncStorage.setItem(asyncStorage, jsonValue);
-    const itemData = await getData(asyncStorage);
-    const parsed = JSON.parse(itemData);
-    setParsed(parsed);
-  } catch (e) {
-    console.log(e);
-  }
-};
-export const filterItem = async (array, setParsed, textInput) => {
-  try {
-    const newItems = [...array].filter((item) => item.name === textInput);
 
     setParsed(newItems);
   } catch (e) {
