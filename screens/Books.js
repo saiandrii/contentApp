@@ -31,9 +31,16 @@ import MusicItem from "../components/MusicComponents/MusicItem";
 import BooksItem from "../components/BooksComponents/BooksItem";
 import Popup from "../components/Popup";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { debounce, filter } from "lodash";
+
 import BookEditModal from "../components/BooksComponents/BookModal/BookEditModal";
 import BookModalAdditem from "../components/BooksComponents/BookModal/BookModalAdditem";
+import {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { MotiView } from "moti";
 
 const Books = ({ navigation }) => {
   const { buttonVisible, setButtonVisible } = useContext(ContentContext);
@@ -108,22 +115,25 @@ const Books = ({ navigation }) => {
     }
   }, [filtered]);
 
-  const fadeAnim = useAnimatedValue(scrolled ? 50 : 0);
-
-  const animation = () => {
-    Animated.timing(fadeAnim, {
-      toValue: scrolled ? 50 : 0,
-      duration: scrolled ? 30 : 30,
-      useNativeDriver: false,
-    }).start();
-  };
+  // const animation = () => {
+  //   Animated.timing(fadeAnim, {
+  //     toValue: scrolled ? 50 : 0,
+  //     duration: scrolled ? 30 : 30,
+  //     useNativeDriver: false,
+  //   }).start();
+  // };
 
   return (
     <View style={{ flex: 1 }}>
-      <Animated.View
+      <MotiView
+        from={{
+          height: scrolled ? 50 : 0,
+        }}
+        animate={{ height: scrolled ? 50 : 0 }}
+        transition={{ type: "timing", duration: 100 }}
         style={{
           borderRadius: 5,
-          height: fadeAnim,
+          height: 50,
           backgroundColor: colors.placeholder,
           justifyContent: "center",
 
@@ -206,13 +216,13 @@ const Books = ({ navigation }) => {
               <MaterialCommunityIcons
                 name="sort-variant"
                 size={28}
-                color="black"
+                color="dark-grey"
                 onPress={() => setSorted(!sorted)}
               />
             </TouchableOpacity>
           </View>
         ) : null}
-      </Animated.View>
+      </MotiView>
       {sorted ? <Popup /> : null}
       <FlatList
         contentContainerStyle={{}}
@@ -232,13 +242,11 @@ const Books = ({ navigation }) => {
             setSorted(false);
             setButtonVisible("none");
             setScrolled(false);
-            animation();
-          } else if (currentOffset <= 300) {
+          } else {
             setSorted(false);
 
             setButtonVisible();
             setScrolled(true);
-            animation();
           }
         }}
         scrollEventThrottle={1}

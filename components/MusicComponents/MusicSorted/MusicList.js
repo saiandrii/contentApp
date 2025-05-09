@@ -14,21 +14,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getData } from "../../../AyncStorage";
 import { colors } from "../../../misc";
 import { ContentContext } from "../../../AppContext";
+import { MotiView } from "moti";
 
 const MusicList = ({ item, index }) => {
   const [itemPressed, setItemPressed] = useState(false);
   const { musicItem, setMusicItem } = useContext(ContentContext);
   const { sorted, setSorted } = useContext(ContentContext);
 
-  const fadeAnim = useAnimatedValue(itemPressed ? 120 : 95);
+  // const fadeAnim = useAnimatedValue(itemPressed ? 120 : 95);
 
-  const animation = () => {
-    Animated.timing(fadeAnim, {
-      toValue: itemPressed ? 95 : 120,
-      duration: 110,
-      useNativeDriver: false,
-    }).start();
-  };
+  // const animation = () => {
+  //   Animated.timing(fadeAnim, {
+  //     toValue: itemPressed ? 95 : 120,
+  //     duration: 110,
+  //     useNativeDriver: false,
+  //   }).start();
+  // };
 
   const deleteData = async () => {
     try {
@@ -43,9 +44,11 @@ const MusicList = ({ item, index }) => {
     }
   };
   return (
-    <Animated.View
+    <MotiView
+      from={{ height: itemPressed ? 120 : 95 }}
+      animate={{ height: itemPressed ? 120 : 95 }}
+      transition={{ type: "spring", duration: 600 }}
       style={{
-        height: fadeAnim,
         backgroundColor: colors.itembg,
         // borderBottomWidth: 0.5,
         // borderBottomStartRadius: 25,
@@ -66,7 +69,6 @@ const MusicList = ({ item, index }) => {
         onPress={() => {
           setItemPressed(!itemPressed);
           setSorted(false);
-          animation();
         }}
         activeOpacity={0.9}
         style={{}}
@@ -154,7 +156,7 @@ const MusicList = ({ item, index }) => {
           </View>
         </View>
       </TouchableOpacity>
-    </Animated.View>
+    </MotiView>
   );
 };
 

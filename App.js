@@ -6,6 +6,7 @@ import { colors } from "./misc";
 import { useContext } from "react";
 import * as NavigationBar from "expo-navigation-bar";
 import AddItemModal from "../contentapp/components/AddItemModal";
+import AnimatedModalButtom from "../contentapp/components/AnimatedModalButton";
 
 export default function App() {
   return (
@@ -26,8 +27,10 @@ export default function App() {
             padding: 20,
           }}
         >
-          <AddItemButton />
+          {/* <AddItemButton /> */}
+
           <AddItemModal />
+          <AnimatedModalButtom />
         </View>
       </AppProvider>
     </>

@@ -47,7 +47,7 @@ const BookEditModal = ({ item }) => {
   var f = new Date(itemFinishDate).toLocaleDateString("en-GB");
 
   useEffect(() => {
-    setPressed(numbers[2]);
+    setPressed(bookItemData?.number);
   }, []);
 
   const handleBookItem = async () => {
@@ -73,6 +73,9 @@ const BookEditModal = ({ item }) => {
       itemToUpdate.finish =
         itemFinishDate.length <= 0 ? itemToUpdate.finish : f;
       itemToUpdate.number = pressed;
+
+      itemToUpdate.number =
+        itemToUpdate.number === pressed ? itemToUpdate.number : pressed;
 
       const jsonValue = JSON.stringify(bookItem);
       await AsyncStorage.setItem("bookItem", jsonValue);

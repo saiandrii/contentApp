@@ -63,10 +63,10 @@ const ModalComponent = () => {
                 style={{
                   justifyContent: "center",
 
-                  paddingTop: 5,
+                  paddingTop: 10,
                 }}
               >
-                {firstAdd === true ? (
+                {/* {firstAdd === true ? (
                   <View
                     style={{
                       backgroundColor: colors.outline,
@@ -105,7 +105,10 @@ const ModalComponent = () => {
                       )}
                     />
                   </View>
-                ) : firstAddMusic ? (
+                ) : 
+                 */}
+
+                {firstAddMusic ? (
                   <MusicModalItem />
                 ) : firstAddBooks ? (
                   <BooksModalItem />

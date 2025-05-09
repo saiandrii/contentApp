@@ -17,6 +17,7 @@ const AppProvider = ({ children }) => {
   const [editModal, setEditModal] = useState(false);
   const [activeState, setActiveState] = useState();
   const [filtered, setFiltered] = useState("");
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <ContentContext.Provider
@@ -47,6 +48,8 @@ const AppProvider = ({ children }) => {
         setEditModal,
         bookItemData,
         setBookItemData,
+        expanded,
+        setExpanded,
       }}
     >
       {children}

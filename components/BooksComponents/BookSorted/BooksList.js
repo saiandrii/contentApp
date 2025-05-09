@@ -19,10 +19,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { filterItem, getData } from "../../../AyncStorage";
 import { colors } from "../../../misc";
 import { ContentContext } from "../../../AppContext";
-import { useIsFocused } from "@react-navigation/native";
-import { debounce } from "lodash";
-import BookEditModal from "../BookModal/BookEditModal";
-import BookModalAdditem from "../BookModal/BookModalAdditem";
 
 const BooksList = ({ item, index }) => {
   const [itemPressed, setItemPressed] = useState(false);
@@ -52,23 +48,6 @@ const BooksList = ({ item, index }) => {
       const bookItemData = await getData("bookItem");
       const parsed = JSON.parse(bookItemData);
       setBookItem(parsed);
-      setDots(!dots);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const editData = async () => {
-    try {
-      const newItems = [...bookItem].findIndex((obj) => obj.id === item?.id);
-      const itemToUpdate = bookItem[newItems];
-      itemToUpdate.finish = new Date().toLocaleDateString("en-GB");
-
-      const jsonValue = JSON.stringify(bookItem);
-      await AsyncStorage.setItem("bookItem", jsonValue);
-      const bookItemData = await getData("bookItem");
-      const parsed = JSON.parse(bookItemData);
-      setBookItem(parsed);
-
       setDots(!dots);
     } catch (e) {
       console.log(e);

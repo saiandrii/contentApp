@@ -67,7 +67,7 @@ const MusicModalItem = ({}) => {
       <View
         style={{
           backgroundColor: colors.outline,
-          height: firstAdd === true ? 355 : 370,
+          height: 370,
 
           marginHorizontal: 10,
           borderRadius: 10,

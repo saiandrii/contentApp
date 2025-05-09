@@ -104,7 +104,7 @@ const BooksModalItem = ({}) => {
       <View
         style={{
           backgroundColor: colors.outline,
-          height: firstAdd === true ? 355 : 450,
+          height: 450,
 
           marginHorizontal: 10,
           borderRadius: 10,
