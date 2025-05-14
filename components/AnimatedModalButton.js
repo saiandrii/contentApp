@@ -20,7 +20,7 @@ export default function ActionMenu() {
   const { sorted, setSorted } = useContext(ContentContext);
 
   const { expanded, setExpanded } = useContext(ContentContext);
-  console.log(modalVisible);
+
   const actions = [
     {
       type: "Music",
@@ -117,16 +117,7 @@ const ActionButton = ({ item, index }) => {
     >
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={
-          () => item?.onPress()
-          //   item.type === "Music"
-          //     ? console.log("msuica")
-          //     : item.type === "Book"
-          //     ? console.log("boiikia")
-          //     : item.type === "Film"
-          //     ? console.log("filmia")
-          //     : null
-        }
+        onPress={() => item?.onPress()}
         style={[
           styles.button,
           {

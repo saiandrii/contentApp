@@ -5,7 +5,7 @@ export const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (e) {
-    console.log(console.log(e));
+    console.log(e);
   }
 };
 
@@ -14,7 +14,7 @@ export const getData = async (key) => {
     const value = await AsyncStorage.getItem(key);
     return value;
   } catch (e) {
-    console.log(console.log(e));
+    console.log(e);
   }
 };
 

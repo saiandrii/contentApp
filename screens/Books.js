@@ -22,24 +22,17 @@ import React, {
   useState,
 } from "react";
 
-import AddItemModal from "../components/AddItemModal";
-import AddItemButton from "../components/AddItemButton";
 import { ContentContext } from "../AppContext";
 import { filterItem, getData, storeData } from "../AyncStorage";
 import { colors, formattedToday } from "../misc";
-import MusicItem from "../components/MusicComponents/MusicItem";
+
 import BooksItem from "../components/BooksComponents/BooksItem";
 import Popup from "../components/Popup";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import BookEditModal from "../components/BooksComponents/BookModal/BookEditModal";
 import BookModalAdditem from "../components/BooksComponents/BookModal/BookModalAdditem";
-import {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+
 import { MotiView } from "moti";
 
 const Books = ({ navigation }) => {
@@ -125,7 +118,7 @@ const Books = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <MotiView
+      {/* <MotiView
         from={{
           height: scrolled ? 50 : 0,
         }}
@@ -222,9 +215,103 @@ const Books = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         ) : null}
-      </MotiView>
+      </MotiView> */}
       {sorted ? <Popup /> : null}
+
       <FlatList
+        ListHeaderComponent={
+          <View
+            style={{
+              borderRadius: 5,
+              height: 50,
+              backgroundColor: colors.placeholder,
+              justifyContent: "center",
+
+              marginHorizontal: 10,
+              marginTop: 10,
+              marginBottom: 5,
+              elevation: 1,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: colors.additionalOne,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: 50,
+                    height: 50,
+                    borderRadius: 5,
+                  }}
+                  activeOpacity={0.8}
+                >
+                  {filtered.length <= 0 ? (
+                    <Fontisto
+                      name="search"
+                      size={20}
+                      color="#eeeeee"
+                      onPress={() => ""}
+                    />
+                  ) : (
+                    <Ionicons
+                      name="close-outline"
+                      size={30}
+                      color="#eeeeee"
+                      onPress={() => (setFiltered(""), Keyboard.dismiss())}
+                    />
+                  )}
+                </TouchableOpacity>
+
+                <View>
+                  <TextInput
+                    onFocus={() => {
+                      setSorted(false);
+                    }}
+                    value={filtered}
+                    onChangeText={(text) => {
+                      setFiltered(text);
+                    }}
+                    placeholder="book name or author..."
+                    style={{
+                      left: 10,
+                      borderRadius: 10,
+                      fontSize: 15,
+                      paddingHorizontal: 5,
+                      width: 235,
+                    }}
+                  />
+                </View>
+              </View>
+              <TouchableOpacity
+                style={{
+                  padding: 10,
+                }}
+                activeOpacity={0.8}
+              >
+                <MaterialCommunityIcons
+                  name="sort-variant"
+                  size={28}
+                  color="dark-grey"
+                  onPress={() => setSorted(!sorted)}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        }
         contentContainerStyle={{}}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
@@ -232,24 +319,23 @@ const Books = ({ navigation }) => {
         renderItem={({ item }) => {
           return <BooksItem item={item} />;
         }}
-        onScroll={(e) => {
-          let offset = 0;
-          const currentOffset = e.nativeEvent.contentOffset.y;
+        // onScroll={(e) => {
+        //   let offset = 0;
+        //   const currentOffset = e.nativeEvent.contentOffset.y;
 
-          const direction = currentOffset > offset ? "down" : "up";
+        //   const direction = currentOffset > offset ? "down" : "up";
 
-          if (currentOffset > 200) {
-            setSorted(false);
-            setButtonVisible("none");
-            setScrolled(false);
-          } else {
-            setSorted(false);
+        //   if (currentOffset > 200) {
+        //     setSorted(false);
+        //     setButtonVisible("none");
+        //     setScrolled(false);
+        //   } else {
+        //     setSorted(false);
 
-            setButtonVisible();
-            setScrolled(true);
-          }
-        }}
-        scrollEventThrottle={1}
+        //     setButtonVisible();
+        //     setScrolled(true);
+        //   }
+        // }}
       />
       {editModal === true ? <BookModalAdditem /> : null}
     </View>
