@@ -1,18 +1,6 @@
-import {
-  Animated,
-  Dimensions,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  useAnimatedValue,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, StyleSheet } from "react-native";
 import React, { useContext, useEffect, useRef } from "react";
 
-import AddItemModal from "../components/AddItemModal";
-import AddItemButton from "../components/AddItemButton";
 import { ContentContext } from "../AppContext";
 import { getData, storeData } from "../AyncStorage";
 import { formattedToday } from "../misc";
@@ -20,21 +8,13 @@ import MusicItem from "../components/MusicComponents/MusicItem";
 import { useNavigationState } from "@react-navigation/native";
 
 const Music = ({ navigation }) => {
-  const { buttonVisible, setButtonVisible } = useContext(ContentContext);
   const { musicItem, setMusicItem } = useContext(ContentContext);
-  const { sorted, setSorted } = useContext(ContentContext);
+
   const { activeState, setActiveState } = useContext(ContentContext);
 
   const size = Dimensions.get("window").width / numColumns;
   const scrollRef = useRef();
   const numColumns = 2;
-  const scrollX = useAnimatedValue(0);
-  const { width: windowWidth } = useWindowDimensions();
-
-  const state = useNavigationState((state) => state);
-  useEffect(() => {
-    setActiveState(state.index);
-  }, [state]);
 
   const handleAsync = async () => {
     try {
@@ -72,24 +52,15 @@ const Music = ({ navigation }) => {
 
   return (
     <FlatList
+      contentContainerStyle={{
+        backgroundColor: "#eeeeee",
+        paddingTop: 95,
+      }}
       numColumns={numColumns}
       showsVerticalScrollIndicator={false}
       ref={scrollRef}
       data={musicItem}
       renderItem={({ item }) => <MusicItem item={item} />}
-      onScroll={(e) => {
-        let offset = 0;
-        const currentOffset = e.nativeEvent.contentOffset.y;
-
-        const direction = currentOffset > offset ? "down" : "up";
-
-        if (direction === "down") {
-          setButtonVisible("none");
-        } else if (direction === "up") {
-          setButtonVisible("flex");
-        }
-      }}
-      scrollEventThrottle={1}
     />
   );
 };

@@ -12,7 +12,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { ContentContext } from "../AppContext";
 
-export default function ActionMenu() {
+export default function AnimatedModalButtom() {
   const { modalVisible, setModalVisible } = useContext(ContentContext);
   const { firstAddMusic, setFirstAddMusic } = useContext(ContentContext);
   const { firstAddBooks, setFirstAddBooks } = useContext(ContentContext);
@@ -49,7 +49,7 @@ export default function ActionMenu() {
       type: "Film",
       color: colors.additionalOne,
       emoji: <FontAwesome name="film" size={24} color="#eeeeee" />,
-      onPress: () => console.log("film"),
+      onPress: () => console.log("or"),
     },
   ];
 
@@ -108,7 +108,7 @@ const ActionButton = ({ item, index }) => {
       }}
       animate={{
         opacity: 1,
-        translateX: -65 * (index + 1),
+        translateX: -80 * (index + 1),
       }}
       exit={{
         opacity: 0,

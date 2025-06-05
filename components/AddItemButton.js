@@ -7,24 +7,40 @@ import {
 } from "react-native";
 import React, { useContext } from "react";
 
-import { FontAwesome6 } from "@expo/vector-icons";
 import { ContentContext } from "../AppContext";
 import { colors } from "../misc";
+import { MotiView } from "moti";
 
-const AddItemButton = () => {
+const AddItemButton = ({
+  onPress,
+  style,
+  icon,
+  animate,
+  animateIcon,
+  transition,
+  transitionIcon,
+  from,
+  exit,
+}) => {
   const { modalVisible, setModalVisible } = useContext(ContentContext);
   const { buttonVisible, setButtonVisible } = useContext(ContentContext);
   const { sorted, setSorted } = useContext(ContentContext);
+  const { expanded, setExpanded } = useContext(ContentContext);
 
   const windowHeight = Dimensions.get("screen").height;
 
   return (
     <TouchableOpacity
-      onPress={() => (setModalVisible(true), setSorted(false))}
+      // onPress={() => (setModalVisible(true), setSorted(false))}
+      onPress={onPress}
       activeOpacity={0.9}
       style={{}}
     >
-      <View
+      <MotiView
+        transition={transition}
+        animate={animate}
+        from={from}
+        exit={exit}
         style={{
           display: buttonVisible,
           borderRadius: 30,
@@ -35,12 +51,13 @@ const AddItemButton = () => {
           backgroundColor: colors.additionalOne,
           width: 60,
           height: 60,
+          ...style,
         }}
       >
-        <View>
-          <FontAwesome6 name="add" size={43} color="#EEEEEE" />
-        </View>
-      </View>
+        <MotiView transition={transitionIcon} animate={animateIcon}>
+          {icon}
+        </MotiView>
+      </MotiView>
     </TouchableOpacity>
   );
 };

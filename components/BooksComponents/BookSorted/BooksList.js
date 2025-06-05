@@ -29,6 +29,7 @@ const BooksList = ({ item, index }) => {
   const { bookItemData, setBookItemData } = useContext(ContentContext);
   const { sorted, setSorted } = useContext(ContentContext);
   const { filtered, setFiltered } = useContext(ContentContext);
+  const { image, setImage } = useContext(ContentContext);
 
   const fadeAnim = useAnimatedValue(itemPressed ? 120 : 95);
 
@@ -66,10 +67,9 @@ const BooksList = ({ item, index }) => {
         marginBottom: 8,
         paddingVertical: 10,
         marginHorizontal: 10,
-        backgroundColor: colors.placeholder,
+
         borderRadius: 5,
         width: "94.5%",
-        elevation: 1,
       }}
     >
       <TouchableOpacity
@@ -84,7 +84,7 @@ const BooksList = ({ item, index }) => {
         <View style={{}}>
           <MaterialCommunityIcons
             name="dots-vertical"
-            size={25}
+            size={28}
             color="black"
           />
         </View>
@@ -156,7 +156,7 @@ const BooksList = ({ item, index }) => {
         }}
         activeOpacity={0.9}
         style={{
-          height: 200,
+          height: item?.finish !== "Invalid Date" ? "100%" : 190,
           width: 120,
           backgroundColor: colors.placeholder,
           // borderBottomWidth: 0.5,
@@ -173,7 +173,7 @@ const BooksList = ({ item, index }) => {
           alignItems: "center",
         }}
       >
-        {item?.image ? (
+        {item?.image || item?.picture ? (
           <Image
             style={{
               height: "100%",
@@ -181,7 +181,16 @@ const BooksList = ({ item, index }) => {
               resizeMode: "stretch",
               borderRadius: 3,
             }}
-            source={{ uri: item?.image ? item?.image : "123" }}
+            // source={{ uri: item?.image ? item?.image : "123" }}
+            source={{ uri: item?.picture || item?.image }}
+            // source={{
+            //   uri:
+            //     item?.image ==
+            //       "https://dryofg8nmyqjw.cloudfront.net/images/no-cover.png" &&
+            //     item?.picture
+            //       ? item?.picture
+            //       : item?.image,
+            // }}
           />
         ) : (
           <View
@@ -210,18 +219,20 @@ const BooksList = ({ item, index }) => {
       <View style={{ maxWidth: "55%" }}>
         <View
           style={{
-            paddingTop: 5,
-            paddingBottom: 20,
+            paddingTop: 0,
+            paddingBottom: 15,
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           <Text
             style={{
-              fontSize: 18,
+              fontSize: item?.name.length >= 20 ? 16 : 18,
+              maxWidth: "90%",
               fontWeight: "bold",
               paddingBottom: 3,
               textAlign: "center",
+              flexWrap: "wrap",
             }}
           >
             {item?.name}
@@ -245,25 +256,29 @@ const BooksList = ({ item, index }) => {
             }}
           />
         </View>
-        <View style={styles.textView}>
-          <Feather name="book-open" size={15} color="black" />
-          <Text style={{ paddingLeft: 5 }}>{item?.pages}</Text>
-        </View>
-        <View style={styles.textView}>
-          <Feather name="calendar" size={15} color="black" />
-          <Text style={{ paddingLeft: 5 }}>{item?.start} </Text>
-        </View>
-        {item?.finish !== "Invalid Date" ? (
+        <View style={{ justifyContent: "center" }}>
           <View style={styles.textView}>
-            <Feather name="check" size={17} color="black" />
-            <Text style={{ paddingLeft: 3 }}>{item?.finish}</Text>
+            <Feather name="book-open" size={15} color="black" />
+            <Text style={{ paddingLeft: 5 }}>{item?.pages}</Text>
           </View>
-        ) : null}
-        <View style={styles.textView}>
-          <Feather name="star" size={15} color="black" />
-          <Text style={{ paddingLeft: 3, fontWeight: "bold" }}>
-            {item?.number}
-          </Text>
+          <View style={styles.textView}>
+            <Feather name="calendar" size={15} color="black" />
+            <Text style={{ paddingLeft: 5 }}>{item?.start} </Text>
+          </View>
+          {item?.finish !== "Invalid Date" ? (
+            <View style={styles.textView}>
+              <Feather name="check" size={17} color="black" />
+              <Text style={{ paddingLeft: 3 }}>{item?.finish}</Text>
+            </View>
+          ) : null}
+          {item?.number != undefined ? (
+            <View style={styles.textView}>
+              <Feather name="star" size={15} color="black" />
+              <Text style={{ paddingLeft: 3, fontWeight: "bold" }}>
+                {item?.number}
+              </Text>
+            </View>
+          ) : null}
         </View>
       </View>
     </Pressable>

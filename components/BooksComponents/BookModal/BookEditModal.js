@@ -17,6 +17,8 @@ import { colors, formattedToday } from "../../../misc";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DatePicker from "../../DatePicker";
+import { MotiView } from "moti";
+import PicturePicker from "../../PicturePicker/PicturePicker";
 
 const BookEditModal = ({ item }) => {
   const [pressed, setPressed] = useState();
@@ -38,6 +40,8 @@ const BookEditModal = ({ item }) => {
   const [finish, setFinish] = useState(false);
   const [sendReady, setSendReady] = useState(false);
   const [wrongInput, setWrongInput] = useState(false);
+  const [animatedPressIsbn, setAnimatedPressIsbn] = useState(false);
+  const { image, setImage } = useContext(ContentContext);
 
   const [imageItem, setImageItem] = useState("");
 
@@ -76,6 +80,7 @@ const BookEditModal = ({ item }) => {
 
       itemToUpdate.number =
         itemToUpdate.number === pressed ? itemToUpdate.number : pressed;
+      itemToUpdate.picture = image;
 
       const jsonValue = JSON.stringify(bookItem);
       await AsyncStorage.setItem("bookItem", jsonValue);
@@ -84,6 +89,7 @@ const BookEditModal = ({ item }) => {
 
       setBookItem(parsed);
       setEditModal(false);
+      setImage();
     } catch (e) {
       console.log(e);
     }
@@ -258,7 +264,7 @@ const BookEditModal = ({ item }) => {
                 style={{
                   backgroundColor: colors.itembg,
 
-                  width: "32%",
+                  width: "25%",
                   height: 60,
                   borderRadius: 10,
                   marginTop: 70,
@@ -287,11 +293,14 @@ const BookEditModal = ({ item }) => {
                 />
               </View>
 
-              <View
+              <MotiView
+                animate={{
+                  width: animatedPressIsbn ? "40%" : "30%",
+                }}
                 style={{
                   backgroundColor: colors.itembg,
 
-                  width: "55%",
+                  width: "26.25%",
                   height: 60,
                   borderRadius: 10,
                   marginTop: 70,
@@ -308,16 +317,27 @@ const BookEditModal = ({ item }) => {
                 <TextInput
                   value={itemIsbn}
                   onFocus={() => {
-                    setitemIsbn("978-");
+                    setAnimatedPressIsbn(true);
+                    if (itemIsbn.length <= 4) {
+                      setitemIsbn("978-");
+                    }
+                  }}
+                  onBlur={() => {
+                    if (itemIsbn.length <= 4) {
+                      setAnimatedPressIsbn(false);
+
+                      setitemIsbn("");
+                    }
                   }}
                   onChangeText={(text) => {
                     setitemIsbn(text);
                   }}
-                  keyboardType="numeric"
-                  placeholder={bookItemData?.isbn}
+                  placeholder={
+                    bookItemData?.isbn ? bookItemData?.isbn : "ISBN..."
+                  }
                   placeholderTextColor={colors.placeholder}
+                  keyboardType="numeric"
                   maxLength={17}
-                  multiline
                   style={{
                     fontWeight: "bold",
                     color: "white",
@@ -325,7 +345,29 @@ const BookEditModal = ({ item }) => {
                     fontSize: 15,
                   }}
                 />
-              </View>
+              </MotiView>
+
+              <MotiView
+                animate={{
+                  width: animatedPressIsbn ? "20%" : "30%",
+                }}
+                style={{
+                  backgroundColor: colors.itembg,
+
+                  width: "26.25%",
+                  height: 60,
+                  borderRadius: 10,
+                  marginTop: 70,
+
+                  justifyContent: "center",
+
+                  alignItems: "center",
+                  paddingHorizontal: 10,
+                  marginHorizontal: 4,
+                }}
+              >
+                <PicturePicker />
+              </MotiView>
             </View>
             <View
               style={{

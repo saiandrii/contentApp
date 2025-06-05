@@ -18,6 +18,8 @@ const AppProvider = ({ children }) => {
   const [activeState, setActiveState] = useState();
   const [filtered, setFiltered] = useState("");
   const [expanded, setExpanded] = useState(false);
+  const [image, setImage] = useState();
+  const [searchPressed, setSearchPressed] = useState(false);
 
   return (
     <ContentContext.Provider
@@ -50,6 +52,10 @@ const AppProvider = ({ children }) => {
         setBookItemData,
         expanded,
         setExpanded,
+        image,
+        setImage,
+        searchPressed,
+        setSearchPressed,
       }}
     >
       {children}

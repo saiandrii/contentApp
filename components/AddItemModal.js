@@ -22,6 +22,7 @@ import MusicModalItem from "./MusicComponents/MusicModalItem";
 import { colors } from "../misc";
 import BooksModalItem from "./BooksComponents/BooksModalItem";
 import FilmsModalItem from "./FilmsComponent/FilmsModalItem";
+import PicturePicker from "./PicturePicker/PicturePicker";
 
 const ModalComponent = () => {
   const { modalVisible, setModalVisible } = useContext(ContentContext);
@@ -29,6 +30,7 @@ const ModalComponent = () => {
   const { firstAddBooks, setFirstAddBooks } = useContext(ContentContext);
   const { firstAddFilms, setFirstAddFilms } = useContext(ContentContext);
   const { firstAdd, setFirstAdd } = useContext(ContentContext);
+  const { image, setImage } = useContext(ContentContext);
 
   const windowHeight = Dimensions.get("screen").height;
 
@@ -45,7 +47,8 @@ const ModalComponent = () => {
           setFirstAdd(true),
           setFirstAddBooks(false),
           setFirstAddFilms(false),
-          setFirstAddMusic(false)
+          setFirstAddMusic(false),
+          setImage()
         )}
         activeOpacity={0.7}
         style={{

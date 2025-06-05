@@ -1,4 +1,4 @@
-import { StatusBar, View } from "react-native";
+import { SafeAreaView, StatusBar, View } from "react-native";
 import { AppProvider, ContentContext } from "./AppContext";
 import AddItemButton from "./components/AddItemButton";
 import StackNavigator from "./StackNavigator";
@@ -7,12 +7,17 @@ import { useContext } from "react";
 import * as NavigationBar from "expo-navigation-bar";
 import AddItemModal from "../contentapp/components/AddItemModal";
 import AnimatedModalButtom from "../contentapp/components/AnimatedModalButton";
+import ActionMenu from "./components/ActionMenu";
 
 export default function App() {
   return (
     <>
       <AppProvider>
-        <StatusBar backgroundColor={colors.outline} />
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle={"dark-content"}
+          translucent={true}
+        />
 
         <StackNavigator />
         <View
@@ -28,9 +33,9 @@ export default function App() {
           }}
         >
           {/* <AddItemButton /> */}
-
+          {/* <AnimatedModalButtom /> */}
           <AddItemModal />
-          <AnimatedModalButtom />
+          <ActionMenu />
         </View>
       </AppProvider>
     </>

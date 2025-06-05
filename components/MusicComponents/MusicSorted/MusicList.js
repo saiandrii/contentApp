@@ -47,7 +47,7 @@ const MusicList = ({ item, index }) => {
     <MotiView
       from={{ height: itemPressed ? 120 : 95 }}
       animate={{ height: itemPressed ? 120 : 95 }}
-      transition={{ type: "spring", duration: 600 }}
+      transition={{ type: "timing", duration: 100 }}
       style={{
         backgroundColor: colors.itembg,
         // borderBottomWidth: 0.5,

@@ -23,9 +23,9 @@ const Popup = () => {
         style={{
           position: "absolute",
           flex: 1,
-          right: 10,
+          right: 11,
           justifyContent: "center",
-          bottom: -230,
+          bottom: -348,
           zIndex: 500,
           elevation: 5,
         }}

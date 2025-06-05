@@ -10,13 +10,17 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { ContentContext } from "../../AppContext";
 import ModalButton from "../ModalButton";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+
 import { getData, storeData } from "../../AyncStorage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { colors, formattedToday } from "../../misc";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DatePicker from "../DatePicker";
+import { MotiView } from "moti";
+import PicturePicker from "../PicturePicker/PicturePicker";
+import CheckBoxComponent from "../CheckBoxComponent";
 
 const BooksModalItem = ({}) => {
   const [pressed, setPressed] = useState();
@@ -38,16 +42,18 @@ const BooksModalItem = ({}) => {
   const [sendReady, setSendReady] = useState(false);
   const [wrongInput, setWrongInput] = useState(false);
   const { firstAddBooks, setFirstAddBooks } = useContext(ContentContext);
+  const { image, setImage } = useContext(ContentContext);
   const [imageItem, setImageItem] = useState("");
+  const [animatedPressIsbn, setAnimatedPressIsbn] = useState(false);
+  const [animatedPressPhoto, setAnimatedPressPhoto] = useState(false);
+  const [checkBoxReading, setCheckBoxReading] = useState(false);
+  const [checkBoxFinished, setCheckBoxFinished] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
   const numbers = [1, 2, 3, 4, 5];
 
   var s = new Date(itemStartDate).toLocaleDateString("en-GB");
   var f = new Date(itemFinishDate).toLocaleDateString("en-GB");
-
-  useEffect(() => {
-    setPressed(numbers[2]);
-  }, []);
 
   const handleBookItem = async () => {
     try {
@@ -58,11 +64,12 @@ const BooksModalItem = ({}) => {
           start: new Date(itemStartDate).toLocaleDateString("en-GB"),
           finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
 
-          number: pressed,
+          number: pressed ? pressed : undefined,
           id: new Date() + Math.random(),
           pages: itemPages,
           isbn: itemIsbn,
           image: imageItem,
+          picture: image,
         },
         ...bookItem,
       ]);
@@ -101,10 +108,14 @@ const BooksModalItem = ({}) => {
 
   return (
     <View>
-      <View
+      <MotiView
+        animate={{ height: isFinished ? 450 : 360 }}
+        transition={{
+          duration: 300,
+          type: "timing",
+        }}
         style={{
           backgroundColor: colors.outline,
-          height: 450,
 
           marginHorizontal: 10,
           borderRadius: 10,
@@ -227,12 +238,13 @@ const BooksModalItem = ({}) => {
                   mode="date"
                   value={new Date()}
                   onChange={(text) => (
-                    start
+                    start && text.type == "set"
                       ? (setItemStartDate(text.nativeEvent.timestamp),
                         setStart(!start))
-                      : finish
+                      : finish && text.type == "set"
                       ? (setItemFinishDate(text.nativeEvent.timestamp),
-                        setFinish(!finish))
+                        setFinish(!finish),
+                        setIsFinished(true))
                       : null,
                     setShowPicker(!showPicker)
                   )}
@@ -244,7 +256,7 @@ const BooksModalItem = ({}) => {
                 style={{
                   backgroundColor: colors.itembg,
 
-                  width: "32%",
+                  width: "25%",
                   height: 60,
                   borderRadius: 10,
                   marginTop: 70,
@@ -261,7 +273,7 @@ const BooksModalItem = ({}) => {
                     setItemPages(text);
                   }}
                   keyboardType="numeric"
-                  placeholder="pages..."
+                  placeholder="pages"
                   placeholderTextColor={colors.placeholder}
                   maxLength={5}
                   style={{
@@ -273,11 +285,12 @@ const BooksModalItem = ({}) => {
                 />
               </View>
 
-              <View
+              <MotiView
+                animate={{ width: animatedPressIsbn ? "40%" : "30%" }}
                 style={{
                   backgroundColor: colors.itembg,
 
-                  width: "55%",
+                  width: "26.25%",
                   height: 60,
                   borderRadius: 10,
                   marginTop: 70,
@@ -294,7 +307,17 @@ const BooksModalItem = ({}) => {
                 <TextInput
                   value={itemIsbn}
                   onFocus={() => {
-                    setitemIsbn("978-");
+                    setAnimatedPressIsbn(true);
+                    if (itemIsbn.length <= 4) {
+                      setitemIsbn("978-");
+                    }
+                  }}
+                  onBlur={() => {
+                    if (itemIsbn.length <= 4) {
+                      setAnimatedPressIsbn(false);
+
+                      setitemIsbn("");
+                    }
                   }}
                   onChangeText={(text) => {
                     setitemIsbn(text);
@@ -303,7 +326,6 @@ const BooksModalItem = ({}) => {
                   placeholder="ISBN..."
                   placeholderTextColor={colors.placeholder}
                   maxLength={17}
-                  multiline
                   style={{
                     fontWeight: "bold",
                     color: "white",
@@ -311,46 +333,98 @@ const BooksModalItem = ({}) => {
                     fontSize: 15,
                   }}
                 />
-              </View>
-            </View>
-            <View
-              style={{
-                height: 80,
-                width: "90%",
-                flexDirection: "row",
-                borderRadius: 10,
-                top: 10,
-                backgroundColor: colors.itembg,
+              </MotiView>
 
-                justifyContent: "space-around",
-                alignItems: "center",
-              }}
-            >
-              {numbers.map((item) => (
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  key={Math.random()}
-                  onPress={() => {
-                    setPressed(item);
-                  }}
-                >
-                  <View style={pressed === item ? styles.viewSelected : null}>
-                    <Text
-                      style={
-                        pressed === item
-                          ? styles.numberSelected
-                          : styles.numberStyle
-                      }
-                    >
-                      {item}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+              <MotiView
+                animate={{ width: animatedPressIsbn ? "20%" : "30%" }}
+                style={{
+                  backgroundColor: colors.itembg,
+
+                  width: "26.25%",
+                  height: 60,
+                  borderRadius: 10,
+                  marginTop: 70,
+
+                  justifyContent: "center",
+
+                  alignItems: "center",
+                  paddingHorizontal: 10,
+                  marginHorizontal: 4,
+                }}
+              >
+                <PicturePicker />
+              </MotiView>
             </View>
+
+            {
+              // <View
+              //   style={{
+              //     flexDirection: "row",
+              //     justifyContent: "space-around",
+              //     width: "90%",
+              //     height: 80,
+              //     borderRadius: 10,
+              //     top: 10,
+              //     marginBottom: 10,
+              //   }}
+              // >
+              //   <CheckBoxComponent
+              //     onPress={() => (
+              //       setCheckBoxReading(!checkBoxReading),
+              //       setCheckBoxFinished(false)
+              //     )}
+              //     text={"reading"}
+              //   />
+              //   <CheckBoxComponent
+              //     onPress={() => (
+              //       setCheckBoxFinished(!checkBoxFinished),
+              //       setCheckBoxReading(false)
+              //     )}
+              //     text={"finished"}
+              //   />
+              // </View>
+            }
+
+            {isFinished ? (
+              <View
+                style={{
+                  height: 80,
+                  width: "90%",
+                  flexDirection: "row",
+                  borderRadius: 10,
+                  top: 10,
+                  backgroundColor: colors.itembg,
+
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                }}
+              >
+                {numbers.map((item) => (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    key={Math.random()}
+                    onPress={() => {
+                      setPressed(item);
+                    }}
+                  >
+                    <View style={pressed === item ? styles.viewSelected : null}>
+                      <Text
+                        style={
+                          pressed === item
+                            ? styles.numberSelected
+                            : styles.numberStyle
+                        }
+                      >
+                        {item}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : null}
           </View>
         </View>
-      </View>
+      </MotiView>
       {(itemName, authorName, itemStartDate).length !== 0 &&
       itemPages.length >= 1 ? (
         <ModalButton

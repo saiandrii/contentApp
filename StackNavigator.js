@@ -26,18 +26,20 @@ const StackNavigator = ({ navigation }) => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{}}>
+      <Stack.Navigator>
         <Stack.Screen
           options={{
             title: "",
-            headerTintColor: "#EEEEEE",
-            headerTitleAlign: "center",
+            headerShown: false,
 
-            headerStyle: {
-              // backgroundColor: "#222831",
-              backgroundColor: colors.outline,
-              elevation: 0,
-            },
+            // headerTintColor: "#EEEEEE",
+            // headerTitleAlign: "center",
+
+            // headerStyle: {
+            //   // backgroundColor: "#222831",
+            //   backgroundColor: colors.outline,
+            //   elevation: 0,
+            // },
           }}
           name="Main"
           component={Main}

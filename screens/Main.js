@@ -15,16 +15,28 @@ const Main = ({ navigation }) => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarPressOpacity: 1,
         tabBarStyle: {
-          backgroundColor: colors.outline,
+          paddingTop: 40,
+          backgroundColor: " rgba(238, 238, 238, 0.97)",
+          position: "absolute",
+          left: 0,
+          top: 0,
+          right: 0,
           elevation: 0,
         },
-        tabBarLabelStyle: { color: "#EEEEEE", fontWeight: "bold" },
+        tabBarLabelStyle: {
+          fontWeight: "bold",
+          fontSize: 20,
+        },
+        tabBarActiveTintColor: colors.additionalOne,
+
         tabBarIndicatorStyle: {
+          display: "none",
           backgroundColor: colors.additionalOne,
           height: 5,
         },
+        tabBarPressOpacity: 0,
+        tabBarPressColor: "#eeeeee",
       }}
     >
       <Tab.Screen name="music">
