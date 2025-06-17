@@ -1,19 +1,13 @@
-import {
-  Button,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useContext, useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+
 import * as ImagePicker from "expo-image-picker";
-import { AppProvider, ContentContext } from "../../AppContext";
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { colors } from "../../misc";
+import itemStore from "../../store/itemStore";
 
 const PicturePicker = () => {
-  const { image, setImage } = useContext(ContentContext);
+  const { image, imageState } = itemStore();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -24,7 +18,7 @@ const PicturePicker = () => {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      imageState(result.assets[0].uri);
     }
   };
 

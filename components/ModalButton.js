@@ -1,11 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext } from "react";
-import { ContentContext } from "../AppContext";
 import { colors } from "../misc";
 
 const ModalButton = ({ name, icon, onPress, style, fontstyle }) => {
-  const { firstAdd, setFirstAdd } = useContext(ContentContext);
-
   return (
     <TouchableOpacity
       activeOpacity={0.9}

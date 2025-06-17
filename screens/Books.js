@@ -1,14 +1,7 @@
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
+import { BackHandler, FlatList, StyleSheet, View } from "react-native";
 
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { ContentContext } from "../AppContext";
 import { filterItem, getData, storeData } from "../AyncStorage";
 import { colors, formattedToday } from "../misc";
 
@@ -18,14 +11,13 @@ import Popup from "../components/Popup";
 import BookModalAdditem from "../components/BooksComponents/BookModal/BookModalAdditem";
 
 import FilterComponent from "../components/FilterComponent";
-import { MotiView } from "moti";
+
+import toggleStore from "../store/toggleStore";
+import itemStore from "../store/itemStore";
 
 const Books = ({ navigation }) => {
-  const { sorted, setSorted } = useContext(ContentContext);
-  const { bookItem, setBookItem } = useContext(ContentContext);
-  const { filtered, setFiltered } = useContext(ContentContext);
-  const { editModal, setEditModal } = useContext(ContentContext);
-  const [refreshing, setRefreshing] = useState(false);
+  const { filtered, bookItem, bookItemArray } = itemStore();
+  const { sorted } = toggleStore();
 
   const [filteredArray, setFilteredArray] = useState([]);
 
@@ -35,7 +27,7 @@ const Books = ({ navigation }) => {
     try {
       const bookItemData = await getData("bookItem");
 
-      if (bookItemData === null) {
+      if (bookItemData === null || bookItemData === undefined) {
         try {
           const jsonValue = JSON.stringify([
             {
@@ -55,7 +47,7 @@ const Books = ({ navigation }) => {
       } else {
         const bookItemData = await getData("bookItem");
         const parsed = JSON.parse(bookItemData);
-        setBookItem(parsed);
+        bookItemArray(parsed);
       }
     } catch (e) {
       console.log(e);
@@ -95,11 +87,7 @@ const Books = ({ navigation }) => {
 
       <FlatList
         bounces={false}
-        ListHeaderComponent={
-          <MotiView>
-            <FilterComponent />
-          </MotiView>
-        }
+        ListHeaderComponent={<FilterComponent />}
         contentContainerStyle={{ backgroundColor: "#eeeeee", paddingTop: 95 }}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
@@ -108,7 +96,6 @@ const Books = ({ navigation }) => {
           return <BooksItem item={item} />;
         }}
       />
-      {editModal === true ? <BookModalAdditem /> : null}
     </View>
   );
 };

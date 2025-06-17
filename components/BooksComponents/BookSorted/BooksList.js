@@ -9,37 +9,22 @@ import {
   useAnimatedValue,
   View,
 } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-
+import React, { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { filterItem, getData } from "../../../AyncStorage";
+import { getData } from "../../../AyncStorage";
 import { colors } from "../../../misc";
-import { ContentContext } from "../../../AppContext";
+import toggleStore from "../../../store/toggleStore";
+import itemStore from "../../../store/itemStore";
 
 const BooksList = ({ item, index }) => {
+  const { toggleSorted, toggleEditModal } = toggleStore();
+  const { bookItem, bookItemArray, bookItemDataArray } = itemStore();
+
   const [itemPressed, setItemPressed] = useState(false);
   const [dots, setDots] = useState(false);
-  const [imageItem, setImageItem] = useState("");
-  const { editModal, setEditModal } = useContext(ContentContext);
-  const { bookItem, setBookItem } = useContext(ContentContext);
-  const { bookItemData, setBookItemData } = useContext(ContentContext);
-  const { sorted, setSorted } = useContext(ContentContext);
-  const { filtered, setFiltered } = useContext(ContentContext);
-  const { image, setImage } = useContext(ContentContext);
-
-  const fadeAnim = useAnimatedValue(itemPressed ? 120 : 95);
-
-  const animation = () => {
-    Animated.timing(fadeAnim, {
-      toValue: itemPressed ? 95 : 120,
-      duration: 110,
-      useNativeDriver: false,
-    }).start();
-  };
 
   const deleteData = async () => {
     try {
@@ -48,7 +33,7 @@ const BooksList = ({ item, index }) => {
       await AsyncStorage.setItem("bookItem", jsonValue);
       const bookItemData = await getData("bookItem");
       const parsed = JSON.parse(bookItemData);
-      setBookItem(parsed);
+      bookItemArray(parsed);
       setDots(!dots);
     } catch (e) {
       console.log(e);
@@ -57,7 +42,7 @@ const BooksList = ({ item, index }) => {
 
   return (
     <Pressable
-      onPressOut={() => (setDots(false), setSorted(false))}
+      onPressOut={() => (setDots(false), toggleSorted(false))}
       style={{
         flex: 1,
         flexDirection: "row",
@@ -73,10 +58,9 @@ const BooksList = ({ item, index }) => {
       }}
     >
       <TouchableOpacity
-        onPress={() => (setDots(!dots), setSorted(false))}
+        onPress={() => (setDots(!dots), toggleSorted(false))}
         style={{
           position: "absolute",
-
           left: "93%",
           top: 5,
         }}
@@ -109,16 +93,13 @@ const BooksList = ({ item, index }) => {
             }}
           >
             <TouchableOpacity
-              onPress={() => {
-                setEditModal(true), setDots(false), setBookItemData(item);
-              }}
+              onPress={() => (
+                toggleEditModal(true), bookItemDataArray(item), setDots(false)
+              )}
               style={{ flexDirection: "row" }}
             >
               <Feather name="edit" size={22} color="#eeeeee" />
               <Text
-                onPress={() => {
-                  setEditModal(true);
-                }}
                 style={{
                   fontSize: 18,
                   color: "#eeeeee",
@@ -152,22 +133,17 @@ const BooksList = ({ item, index }) => {
         key={item?.id}
         onPressOut={() => setDots(false)}
         onPress={() => {
-          setItemPressed(!itemPressed), setSorted(false);
+          setItemPressed(!itemPressed), toggleSorted(false);
         }}
         activeOpacity={0.9}
         style={{
           height: item?.finish !== "Invalid Date" ? "100%" : 190,
           width: 120,
           backgroundColor: colors.placeholder,
-          // borderBottomWidth: 0.5,
-          // borderBottomStartRadius: 25,
-          // borderBottomEndRadius: 25,
           elevation: 5,
-
           marginHorizontal: 14,
           borderRadius: 5,
           borderColor: colors.additionalOne,
-
           borderWidth: 2,
           justifyContent: "center",
           alignItems: "center",

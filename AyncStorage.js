@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useContext } from "react";
-import { ContentContext } from "./AppContext";
+
 export const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);

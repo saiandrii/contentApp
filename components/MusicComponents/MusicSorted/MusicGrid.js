@@ -1,16 +1,17 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getData } from "../../../AyncStorage";
 import { colors } from "../../../misc";
-import { ContentContext } from "../../../AppContext";
+
+import itemStore from "../../../store/itemStore";
 
 const MusicGrid = ({ item }) => {
+  const { musicItem, musicState } = itemStore();
   const [itemPressed, setItemPressed] = useState(false);
-  const { musicItem, setMusicItem } = useContext(ContentContext);
 
   const deleteData = async () => {
     try {
@@ -19,7 +20,7 @@ const MusicGrid = ({ item }) => {
       await AsyncStorage.setItem("musicItem", jsonValue);
       const musicItemData = await getData("musicItem");
       const parsed = JSON.parse(musicItemData);
-      setMusicItem(parsed);
+      musicState(parsed);
     } catch (e) {
       console.log(e);
     }

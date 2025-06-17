@@ -1,35 +1,21 @@
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useAnimatedValue,
-  View,
-} from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getData } from "../../../AyncStorage";
 import { colors } from "../../../misc";
-import { ContentContext } from "../../../AppContext";
+
 import { MotiView } from "moti";
+import toggleStore from "../../../store/toggleStore";
+import itemStore from "../../../store/itemStore";
 
 const MusicList = ({ item, index }) => {
+  const { sorted, toggleSorted } = toggleStore();
+  const { musicItem, musicState } = itemStore();
+
   const [itemPressed, setItemPressed] = useState(false);
-  const { musicItem, setMusicItem } = useContext(ContentContext);
-  const { sorted, setSorted } = useContext(ContentContext);
-
-  // const fadeAnim = useAnimatedValue(itemPressed ? 120 : 95);
-
-  // const animation = () => {
-  //   Animated.timing(fadeAnim, {
-  //     toValue: itemPressed ? 95 : 120,
-  //     duration: 110,
-  //     useNativeDriver: false,
-  //   }).start();
-  // };
 
   const deleteData = async () => {
     try {
@@ -38,7 +24,7 @@ const MusicList = ({ item, index }) => {
       await AsyncStorage.setItem("musicItem", jsonValue);
       const musicItemData = await getData("musicItem");
       const parsed = JSON.parse(musicItemData);
-      setMusicItem(parsed);
+      musicState(parsed);
     } catch (e) {
       console.log(e);
     }
@@ -50,9 +36,7 @@ const MusicList = ({ item, index }) => {
       transition={{ type: "timing", duration: 100 }}
       style={{
         backgroundColor: colors.itembg,
-        // borderBottomWidth: 0.5,
-        // borderBottomStartRadius: 25,
-        // borderBottomEndRadius: 25,
+
         elevation: 5,
         marginVertical: 8,
         marginHorizontal: 16,
@@ -68,7 +52,7 @@ const MusicList = ({ item, index }) => {
         key={item?.id}
         onPress={() => {
           setItemPressed(!itemPressed);
-          setSorted(false);
+          toggleSorted(false);
         }}
         activeOpacity={0.9}
         style={{}}

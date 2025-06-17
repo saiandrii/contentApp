@@ -1,26 +1,19 @@
-import { Dimensions, FlatList, StyleSheet } from "react-native";
-import React, { useContext, useEffect, useRef } from "react";
+import { FlatList, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
 
-import { ContentContext } from "../AppContext";
 import { getData, storeData } from "../AyncStorage";
 import { formattedToday } from "../misc";
-import MusicItem from "../components/MusicComponents/MusicItem";
-import { useNavigationState } from "@react-navigation/native";
+import MusicList from "../components/MusicComponents/MusicSorted/MusicList";
+import itemStore from "../store/itemStore";
 
 const Music = ({ navigation }) => {
-  const { musicItem, setMusicItem } = useContext(ContentContext);
-
-  const { activeState, setActiveState } = useContext(ContentContext);
-
-  const size = Dimensions.get("window").width / numColumns;
-  const scrollRef = useRef();
-  const numColumns = 2;
+  const { musicItem, musicState } = itemStore();
 
   const handleAsync = async () => {
     try {
       const musicItemData = await getData("musicItem");
 
-      if (musicItemData === null) {
+      if (musicItemData === null || musicItemData === undefined) {
         try {
           const jsonValue = JSON.stringify([
             {
@@ -40,7 +33,7 @@ const Music = ({ navigation }) => {
       } else {
         const musicItemData = await getData("musicItem");
         const parsed = JSON.parse(musicItemData);
-        setMusicItem(parsed);
+        musicState(parsed);
       }
     } catch (e) {
       console.log(e);
@@ -56,11 +49,9 @@ const Music = ({ navigation }) => {
         backgroundColor: "#eeeeee",
         paddingTop: 95,
       }}
-      numColumns={numColumns}
       showsVerticalScrollIndicator={false}
-      ref={scrollRef}
       data={musicItem}
-      renderItem={({ item }) => <MusicItem item={item} />}
+      renderItem={({ item }) => <MusicList item={item} />}
     />
   );
 };

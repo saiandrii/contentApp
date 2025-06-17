@@ -1,54 +1,41 @@
 import {
-  Alert,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { ContentContext } from "../../AppContext";
+import React, { useState } from "react";
 import ModalButton from "../ModalButton";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-
 import { getData, storeData } from "../../AyncStorage";
-
-import { colors, formattedToday } from "../../misc";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { colors } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DatePicker from "../DatePicker";
 import { MotiView } from "moti";
 import PicturePicker from "../PicturePicker/PicturePicker";
-import CheckBoxComponent from "../CheckBoxComponent";
+
+import itemStore from "../../store/itemStore";
+import toggleStore from "../../store/toggleStore";
 
 const BooksModalItem = ({}) => {
+  const { bookItem, bookItemArray, image, imageState } = itemStore();
+  const { toggleModal, toggleBooks } = toggleStore();
+
   const [pressed, setPressed] = useState();
-
-  const { bookItem, setBookItem } = useContext(ContentContext);
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { firstAdd, setFirstAdd } = useContext(ContentContext);
-
   const [showPicker, setShowPicker] = useState(false);
+  const [start, setStart] = useState(false);
+  const [finish, setFinish] = useState(false);
+  const [wrongInput, setWrongInput] = useState(false);
+  const [animatedPressIsbn, setAnimatedPressIsbn] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+
   const [itemName, setItemName] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [itemLength, setitemLength] = useState("");
   const [itemFinishDate, setItemFinishDate] = useState("");
   const [itemStartDate, setItemStartDate] = useState("");
   const [itemPages, setItemPages] = useState("");
   const [itemIsbn, setitemIsbn] = useState("");
-  const [start, setStart] = useState(false);
-  const [finish, setFinish] = useState(false);
-  const [sendReady, setSendReady] = useState(false);
-  const [wrongInput, setWrongInput] = useState(false);
-  const { firstAddBooks, setFirstAddBooks } = useContext(ContentContext);
-  const { image, setImage } = useContext(ContentContext);
   const [imageItem, setImageItem] = useState("");
-  const [animatedPressIsbn, setAnimatedPressIsbn] = useState(false);
-  const [animatedPressPhoto, setAnimatedPressPhoto] = useState(false);
-  const [checkBoxReading, setCheckBoxReading] = useState(false);
-  const [checkBoxFinished, setCheckBoxFinished] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
 
   const numbers = [1, 2, 3, 4, 5];
 
@@ -76,11 +63,11 @@ const BooksModalItem = ({}) => {
 
       storeData("bookItem", jsonValue);
 
-      setModalVisible(false), setFirstAdd(true), setFirstAddBooks(false);
+      toggleModal(), toggleBooks(false);
 
       const bookItemData = await getData("bookItem");
       const parsed = JSON.parse(bookItemData);
-      setBookItem(parsed);
+      bookItemArray(parsed);
     } catch (e) {
       console.log(e);
     }
@@ -94,7 +81,7 @@ const BooksModalItem = ({}) => {
         setWrongInput(true);
       } else if (response.ok) {
         const json = await response.json();
-        setImageItem(json.url);
+        imageState(json.url);
         setWrongInput(false);
         console.log(json);
       }

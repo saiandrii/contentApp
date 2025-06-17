@@ -1,34 +1,31 @@
 import {
-  Alert,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { ContentContext } from "../../../AppContext";
+import React, { useEffect, useState } from "react";
 import ModalButton from "../../ModalButton";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { getData, storeData } from "../../../AyncStorage";
+import { getData } from "../../../AyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { colors, formattedToday } from "../../../misc";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { colors } from "../../../misc";
+
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DatePicker from "../../DatePicker";
 import { MotiView } from "moti";
 import PicturePicker from "../../PicturePicker/PicturePicker";
+import itemStore from "../../../store/itemStore";
+import toggleStore from "../../../store/toggleStore";
 
 const BookEditModal = ({ item }) => {
   const [pressed, setPressed] = useState();
 
-  const { bookItem, setBookItem } = useContext(ContentContext);
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { editModal, setEditModal } = useContext(ContentContext);
-  const { bookItemData, setBookItemData } = useContext(ContentContext);
+  const { bookItem, bookItemArray, image, imageState, bookItemData } =
+    itemStore();
 
-  const [showPicker, setShowPicker] = useState(false);
+  const { toggleEditModal } = toggleStore();
+
   const [itemName, setItemName] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [itemLength, setitemLength] = useState("");
@@ -36,14 +33,12 @@ const BookEditModal = ({ item }) => {
   const [itemStartDate, setItemStartDate] = useState("");
   const [itemPages, setItemPages] = useState("");
   const [itemIsbn, setitemIsbn] = useState("");
+
+  const [showPicker, setShowPicker] = useState(false);
   const [start, setStart] = useState(false);
   const [finish, setFinish] = useState(false);
-  const [sendReady, setSendReady] = useState(false);
   const [wrongInput, setWrongInput] = useState(false);
   const [animatedPressIsbn, setAnimatedPressIsbn] = useState(false);
-  const { image, setImage } = useContext(ContentContext);
-
-  const [imageItem, setImageItem] = useState("");
 
   const numbers = [1, 2, 3, 4, 5];
 
@@ -87,9 +82,9 @@ const BookEditModal = ({ item }) => {
       const bookItemDataParse = await getData("bookItem");
       const parsed = JSON.parse(bookItemDataParse);
 
-      setBookItem(parsed);
-      setEditModal(false);
-      setImage();
+      bookItemArray(parsed);
+      toggleEditModal(false);
+      imageState();
     } catch (e) {
       console.log(e);
     }
@@ -103,7 +98,7 @@ const BookEditModal = ({ item }) => {
         setWrongInput(true);
       } else if (response.ok) {
         const json = await response.json();
-        setImageItem(json.url);
+        imageState(json.url);
         setWrongInput(false);
         console.log(json);
       }

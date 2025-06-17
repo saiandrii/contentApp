@@ -1,13 +1,5 @@
-import {
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useContext } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
-import { ContentContext } from "../AppContext";
 import { colors } from "../misc";
 import { MotiView } from "moti";
 
@@ -22,27 +14,15 @@ const AddItemButton = ({
   from,
   exit,
 }) => {
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { buttonVisible, setButtonVisible } = useContext(ContentContext);
-  const { sorted, setSorted } = useContext(ContentContext);
-  const { expanded, setExpanded } = useContext(ContentContext);
-
-  const windowHeight = Dimensions.get("screen").height;
-
   return (
-    <TouchableOpacity
-      // onPress={() => (setModalVisible(true), setSorted(false))}
-      onPress={onPress}
-      activeOpacity={0.9}
-      style={{}}
-    >
+    <TouchableOpacity onPress={onPress} activeOpacity={0.9} style={{}}>
       <MotiView
         transition={transition}
         animate={animate}
         from={from}
         exit={exit}
         style={{
-          display: buttonVisible,
+          display: "flex",
           borderRadius: 30,
 
           elevation: 10,

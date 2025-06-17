@@ -5,22 +5,20 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { ContentContext } from "../../AppContext";
+import React, { useEffect, useState } from "react";
 import ModalButton from "../ModalButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { getData, storeData } from "../../AyncStorage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { colors, formattedToday } from "../../misc";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { colors } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import itemStore from "../../store/itemStore";
+import toggleStore from "../../store/toggleStore";
 
 const FilmsModalItem = ({}) => {
-  const [pressed, setPressed] = useState();
+  const { musicItem, musicState } = itemStore();
+  const { toggleModal } = toggleStore();
 
-  const { musicItem, setMusicItem } = useContext(ContentContext);
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { firstAdd, setFirstAdd } = useContext(ContentContext);
+  const [pressed, setPressed] = useState();
 
   const [showPicker, setShowPicker] = useState(false);
   const [itemName, setItemName] = useState("");
@@ -50,13 +48,11 @@ const FilmsModalItem = ({}) => {
         ...musicItem,
       ]);
       storeData("musicItem", jsonValue);
-      setModalVisible(false);
-
-      setFirstAdd(true);
+      toggleModal(false);
 
       const musicItemData = await getData("musicItem");
       const parsed = JSON.parse(musicItemData);
-      setMusicItem(parsed);
+      musicState(parsed);
     } catch (e) {
       console.log(e);
     }

@@ -1,5 +1,4 @@
 import {
-  Dimensions,
   Modal,
   Pressable,
   SafeAreaView,
@@ -7,34 +6,29 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
-
-import { ContentContext } from "../../../AppContext";
 import { colors } from "../../../misc";
 import BookEditModal from "./BookEditModal";
+import toggleStore from "../../../store/toggleStore";
 
 const BookModalAdditem = ({ item }) => {
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { firstAddMusic, setFirstAddMusic } = useContext(ContentContext);
-  const { firstAddBooks, setFirstAddBooks } = useContext(ContentContext);
-  const { firstAddFilms, setFirstAddFilms } = useContext(ContentContext);
-  const { firstAdd, setFirstAdd } = useContext(ContentContext);
-  const { editModal, setEditModal } = useContext(ContentContext);
-
-  const windowHeight = Dimensions.get("screen").height;
+  const { editModal, toggleEditModal } = toggleStore();
 
   return (
-    <Modal animationType="fade" transparent={true} backdropOpacity={0.3}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      backdropOpacity={0.3}
+      visible={editModal ? true : false}
+    >
       <Pressable
-        onPressOut={() => setEditModal(false)}
+        onPressOut={() => {
+          toggleEditModal(false);
+        }}
         activeOpacity={0.7}
         style={{
-          justifyContent: "flex-end",
-
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-
           flex: 1,
+          justifyContent: "flex-end",
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
         }}
       >
         <TouchableWithoutFeedback>

@@ -5,28 +5,29 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { ContentContext } from "../../AppContext";
+import React, { useEffect, useState } from "react";
+
 import ModalButton from "../ModalButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { getData, storeData } from "../../AyncStorage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { colors, formattedToday } from "../../misc";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { colors } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import toggleStore from "../../store/toggleStore";
+import itemStore from "../../store/itemStore";
 
 const MusicModalItem = ({}) => {
+  const { musicItem, musicState } = itemStore();
+
   const [pressed, setPressed] = useState();
 
-  const { musicItem, setMusicItem } = useContext(ContentContext);
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { firstAdd, setFirstAdd } = useContext(ContentContext);
-
-  const [showPicker, setShowPicker] = useState(false);
   const [itemName, setItemName] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [itemLength, setitemLength] = useState("");
   const [itemFinishDate, setItemFinishDate] = useState("");
+
+  const [showPicker, setShowPicker] = useState(false);
+
+  const { toggleModal } = toggleStore();
 
   const numbers = [1, 2, 3, 4, 5];
 
@@ -50,13 +51,11 @@ const MusicModalItem = ({}) => {
         ...musicItem,
       ]);
       storeData("musicItem", jsonValue);
-      setModalVisible(false);
-
-      setFirstAdd(true);
+      toggleModal();
 
       const musicItemData = await getData("musicItem");
       const parsed = JSON.parse(musicItemData);
-      setMusicItem(parsed);
+      musicState(parsed);
     } catch (e) {
       console.log(e);
     }

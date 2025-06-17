@@ -1,29 +1,12 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import {
-  NavigationContainer,
-  useNavigationState,
-} from "@react-navigation/native";
-import React, { useContext } from "react";
+import { StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Main from "./screens/Main";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-
-import { ContentContext } from "./AppContext";
-import { colors } from "./misc";
-import Popup from "./components/Popup";
+import Search from "./screens/Search";
+import ActionMenu from "./components/ActionMenu";
 
 const Stack = createStackNavigator();
 const StackNavigator = ({ navigation }) => {
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { sorted, setSorted } = useContext(ContentContext);
-
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -31,18 +14,17 @@ const StackNavigator = ({ navigation }) => {
           options={{
             title: "",
             headerShown: false,
-
-            // headerTintColor: "#EEEEEE",
-            // headerTitleAlign: "center",
-
-            // headerStyle: {
-            //   // backgroundColor: "#222831",
-            //   backgroundColor: colors.outline,
-            //   elevation: 0,
-            // },
           }}
           name="Main"
           component={Main}
+        />
+        <Stack.Screen
+          options={{
+            title: "",
+            headerShown: false,
+          }}
+          name="Search"
+          component={Search}
         />
       </Stack.Navigator>
     </NavigationContainer>

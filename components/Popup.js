@@ -1,21 +1,18 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useContext } from "react";
 import { colors } from "../misc";
-import { ContentContext } from "../AppContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  getData,
   sortByFinish,
   sortByName,
   sortByPages,
   sortByRating,
   sortByStart,
 } from "../AyncStorage";
+import toggleStore from "../store/toggleStore";
+import itemStore from "../store/itemStore";
 
 const Popup = () => {
-  const { sorted, setSorted } = useContext(ContentContext);
-  const { bookItem, setBookItem } = useContext(ContentContext);
-  const { musicItem, setMusicItem } = useContext(ContentContext);
+  const { toggleSorted } = toggleStore();
+  const { bookItem, bookItemArray } = itemStore();
 
   return (
     <View>
@@ -25,7 +22,7 @@ const Popup = () => {
           flex: 1,
           right: 11,
           justifyContent: "center",
-          bottom: -348,
+          bottom: -326,
           zIndex: 500,
           elevation: 5,
         }}
@@ -40,7 +37,7 @@ const Popup = () => {
         >
           <TouchableOpacity
             onPress={() => (
-              sortByName(bookItem, setBookItem), setSorted(false)
+              sortByName(bookItem, bookItemArray), toggleSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -58,7 +55,7 @@ const Popup = () => {
 
           <TouchableOpacity
             onPress={() => (
-              sortByRating(bookItem, setBookItem), setSorted(false)
+              sortByRating(bookItem, bookItemArray), toggleSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -76,7 +73,7 @@ const Popup = () => {
 
           <TouchableOpacity
             onPress={() => (
-              sortByFinish(bookItem, setBookItem), setSorted(false)
+              sortByFinish(bookItem, bookItemArray), toggleSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -93,7 +90,7 @@ const Popup = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => (
-              sortByStart(bookItem, setBookItem), setSorted(false)
+              sortByStart(bookItem, bookItemArray), toggleSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >
@@ -110,7 +107,7 @@ const Popup = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => (
-              sortByPages(bookItem, setBookItem), setSorted(false)
+              sortByPages(bookItem, bookItemArray), toggleSorted(false)
             )}
             style={{ flexDirection: "row" }}
           >

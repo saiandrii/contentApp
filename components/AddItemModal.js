@@ -1,38 +1,34 @@
 import {
   Dimensions,
-  FlatList,
-  Keyboard,
-  KeyboardAvoidingView,
   Modal,
   Pressable,
   SafeAreaView,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { ContentContext } from "../AppContext";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import ModalButton from "./ModalButton";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+
 import MusicModalItem from "./MusicComponents/MusicModalItem";
 import { colors } from "../misc";
 import BooksModalItem from "./BooksComponents/BooksModalItem";
 import FilmsModalItem from "./FilmsComponent/FilmsModalItem";
-import PicturePicker from "./PicturePicker/PicturePicker";
+
+import toggleStore from "../store/toggleStore";
+import itemStore from "../store/itemStore";
 
 const ModalComponent = () => {
-  const { modalVisible, setModalVisible } = useContext(ContentContext);
-  const { firstAddMusic, setFirstAddMusic } = useContext(ContentContext);
-  const { firstAddBooks, setFirstAddBooks } = useContext(ContentContext);
-  const { firstAddFilms, setFirstAddFilms } = useContext(ContentContext);
-  const { firstAdd, setFirstAdd } = useContext(ContentContext);
-  const { image, setImage } = useContext(ContentContext);
+  const { image, imageState } = itemStore();
 
-  const windowHeight = Dimensions.get("screen").height;
+  const {
+    modalVisible,
+    toggleModal,
+    firstAddBooks,
+    toggleBooks,
+    firstAddMusic,
+    toggleMusic,
+    firstAddFilms,
+    toggleFilms,
+  } = toggleStore();
 
   return (
     <Modal
@@ -43,12 +39,11 @@ const ModalComponent = () => {
     >
       <Pressable
         onPressOut={() => (
-          setModalVisible(false),
-          setFirstAdd(true),
-          setFirstAddBooks(false),
-          setFirstAddFilms(false),
-          setFirstAddMusic(false),
-          setImage()
+          toggleModal(),
+          toggleBooks(false),
+          toggleMusic(false),
+          toggleFilms(false),
+          imageState()
         )}
         activeOpacity={0.7}
         style={{
@@ -69,48 +64,6 @@ const ModalComponent = () => {
                   paddingTop: 10,
                 }}
               >
-                {/* {firstAdd === true ? (
-                  <View
-                    style={{
-                      backgroundColor: colors.outline,
-                      height: 340,
-
-                      marginHorizontal: 10,
-                      borderRadius: 10,
-                      elevation: 2,
-                    }}
-                  >
-                    <ModalButton
-                      name={"music"}
-                      icon={
-                        <FontAwesome name="music" size={24} color="#eeeeee" />
-                      }
-                      onPress={() => (
-                        setFirstAddMusic(true), setFirstAdd(false)
-                      )}
-                    />
-                    <ModalButton
-                      name={"books"}
-                      icon={
-                        <FontAwesome name="book" size={24} color="#eeeeee" />
-                      }
-                      onPress={() => (
-                        setFirstAddBooks(true), setFirstAdd(false)
-                      )}
-                    />
-                    <ModalButton
-                      name={"films"}
-                      icon={
-                        <FontAwesome name="film" size={24} color="#eeeeee" />
-                      }
-                      onPress={() => (
-                        setFirstAddFilms(true), setFirstAdd(false)
-                      )}
-                    />
-                  </View>
-                ) : 
-                 */}
-
                 {firstAddMusic ? (
                   <MusicModalItem />
                 ) : firstAddBooks ? (
