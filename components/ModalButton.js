@@ -1,7 +1,14 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../misc";
 
-const ModalButton = ({ name, icon, onPress, style, fontstyle }) => {
+const ModalButton = ({
+  name,
+  icon,
+  onPress,
+  style,
+  fontstyle,
+  wrapperStyle,
+}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -9,17 +16,17 @@ const ModalButton = ({ name, icon, onPress, style, fontstyle }) => {
         justifyContent: "center",
         alignItems: "center",
         paddingTop: 25,
+        ...wrapperStyle,
       }}
       onPress={onPress}
     >
       <View
         style={{
           elevation: 2,
-          width: "90%",
-          height: 80,
+
           backgroundColor: colors.itembg,
           borderRadius: 10,
-          borderWidth: 0.15,
+
           justifyContent: "center",
           alignItems: "center",
           ...style,

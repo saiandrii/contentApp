@@ -133,7 +133,9 @@ const BooksList = ({ item, index }) => {
         key={item?.id}
         onPressOut={() => setDots(false)}
         onPress={() => {
-          setItemPressed(!itemPressed), toggleSorted(false);
+          setItemPressed(!itemPressed),
+            toggleSorted(false),
+            console.log(item?.picture);
         }}
         activeOpacity={0.9}
         style={{
@@ -143,8 +145,7 @@ const BooksList = ({ item, index }) => {
           elevation: 5,
           marginHorizontal: 14,
           borderRadius: 5,
-          borderColor: colors.additionalOne,
-          borderWidth: 2,
+
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -157,16 +158,7 @@ const BooksList = ({ item, index }) => {
               resizeMode: "stretch",
               borderRadius: 3,
             }}
-            // source={{ uri: item?.image ? item?.image : "123" }}
             source={{ uri: item?.picture || item?.image }}
-            // source={{
-            //   uri:
-            //     item?.image ==
-            //       "https://dryofg8nmyqjw.cloudfront.net/images/no-cover.png" &&
-            //     item?.picture
-            //       ? item?.picture
-            //       : item?.image,
-            // }}
           />
         ) : (
           <View

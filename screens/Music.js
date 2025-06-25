@@ -3,8 +3,10 @@ import React, { useEffect } from "react";
 
 import { getData, storeData } from "../AyncStorage";
 import { formattedToday } from "../misc";
+import MusicGrid from "../components/MusicComponents/MusicSorted/MusicGrid";
 import MusicList from "../components/MusicComponents/MusicSorted/MusicList";
 import itemStore from "../store/itemStore";
+import { View } from "moti";
 
 const Music = ({ navigation }) => {
   const { musicItem, musicState } = itemStore();
@@ -44,15 +46,16 @@ const Music = ({ navigation }) => {
   }, []);
 
   return (
-    <FlatList
-      contentContainerStyle={{
-        backgroundColor: "#eeeeee",
-        paddingTop: 95,
-      }}
-      showsVerticalScrollIndicator={false}
-      data={musicItem}
-      renderItem={({ item }) => <MusicList item={item} />}
-    />
+    <View style={{ flex: 1, backgroundColor: "#eeeeee" }}>
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: 95,
+        }}
+        showsVerticalScrollIndicator={false}
+        data={musicItem}
+        renderItem={({ item }) => <MusicList item={item} />}
+      />
+    </View>
   );
 };
 

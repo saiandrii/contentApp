@@ -82,13 +82,13 @@ const Books = ({ navigation }) => {
   }, [filtered]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#eeeeee" }}>
       {sorted ? <Popup /> : null}
 
       <FlatList
         bounces={false}
         ListHeaderComponent={<FilterComponent />}
-        contentContainerStyle={{ backgroundColor: "#eeeeee", paddingTop: 95 }}
+        contentContainerStyle={{ paddingTop: 95 }}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
         data={filteredArray.length > 0 ? filteredArray : bookItem}

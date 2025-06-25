@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -11,8 +17,8 @@ import itemStore from "../../../store/itemStore";
 
 const MusicGrid = ({ item }) => {
   const { musicItem, musicState } = itemStore();
-  const [itemPressed, setItemPressed] = useState(false);
 
+  const [itemPressed, setItemPressed] = useState(false);
   const deleteData = async () => {
     try {
       const newItems = [...musicItem].filter((data) => data != item);
@@ -25,7 +31,7 @@ const MusicGrid = ({ item }) => {
       console.log(e);
     }
   };
-
+  // console.log(item.image);
   return (
     <TouchableOpacity
       key={item?.id}
@@ -34,109 +40,140 @@ const MusicGrid = ({ item }) => {
       }}
       activeOpacity={0.9}
       style={{
-        elevation: 2,
-        height: !itemPressed ? 200 : 200,
-        width: itemPressed ? 160 : 160,
-
+        height: 200,
+        width: 160,
+        elevation: 5,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: colors.itembg,
+        // backgroundColor: colors.itembg,
         marginTop: 8,
         marginBottom: 4,
         borderRadius: 5,
-        borderWidth: 2,
+        marginHorizontal: 5,
         borderColor: colors.additionalOne,
-        marginBlockEnd: 16,
-
-        marginInline: 8,
       }}
     >
-      <View
+      <ImageBackground
+        source={{ uri: item?.image ? item?.image : null }}
         style={{
           justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: colors.outline,
-          width: "90%",
-          height: "90%",
-          paddingHorizontal: 5,
 
-          borderRadius: 5,
-          elevation: 2,
+          alignItems: "center",
+          flex: 1,
+          height: "100%",
+          width: "100%",
+        }}
+        blurRadius={0}
+        resizeMode="cover"
+        imageStyle={{
+          borderRadius: 4,
         }}
       >
-        <Text
+        <ImageBackground
+          source={{ uri: item?.image ? item?.image : null }}
+          resizeMode="cover"
           style={{
-            textAlign: "center",
-            paddingBottom: 3,
-            paddingTop: 10,
-            color: "#eeeeee",
-            fontSize: 18,
-            fontWeight: "bold",
+            height: 180,
+            width: 140,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          blurRadius={5}
+          imageStyle={{
+            borderRadius: 5,
           }}
         >
-          {item?.name}
-        </Text>
-        <Text
-          style={{
-            color: "#eeeeee",
-            fontSize: 14,
-            fontWeight: "bold",
-          }}
-        >
-          {item?.author}
-        </Text>
-
-        {!itemPressed ? (
           <View
             style={{
               justifyContent: "center",
               alignItems: "center",
-              paddingTop: 15,
+              width: "100%",
+              height: "100%",
+              paddingHorizontal: 5,
+              backgroundColor: " rgba(0, 0, 0, 0)",
+              borderRadius: 5,
+              opacity: 1,
+              overflow: "hidden",
             }}
           >
-            <View
+            <Text
               style={{
-                alignItems: "center",
-                justifyContent: "center",
-
-                borderRadius: 5,
+                textAlign: "center",
+                paddingBottom: 3,
+                paddingTop: 10,
+                color: colors.additionalOne,
+                fontSize: item?.name.length > 9 ? 15 : 20,
+                fontWeight: "900",
               }}
             >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 40,
-                  color: "#eeeeee",
-                  bottom: 5,
-                }}
-              >
-                {item?.number}
-              </Text>
-            </View>
-
+              {item?.name}
+            </Text>
             <Text
               style={{
                 color: "#eeeeee",
-                fontSize: 10,
-                paddingTop: 10,
+                fontSize: 14,
+                fontWeight: "bold",
               }}
             >
-              {item?.finish}
+              {item?.author}
             </Text>
+
+            {!itemPressed ? (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 15,
+                }}
+              >
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      fontSize: 40,
+                      color: "#eeeeee",
+                      bottom: 5,
+                    }}
+                  >
+                    {item?.number}
+                  </Text>
+                </View>
+
+                <Text
+                  style={{
+                    color: "#eeeeee",
+                    fontSize: 10,
+                    paddingTop: 10,
+                  }}
+                >
+                  {item?.finish}
+                </Text>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={{ paddingTop: 20 }}
+                activeOpacity={0.5}
+                onPress={() => {
+                  deleteData();
+                }}
+              >
+                <Ionicons name="trash" size={30} color="#eeeeee" />
+                <Text style={{ paddingTop: 10, color: "#eeeeee" }}>
+                  {item?.length}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
-        ) : (
-          <TouchableOpacity
-            style={{ paddingTop: 20 }}
-            activeOpacity={0.5}
-            onPress={() => {
-              deleteData();
-            }}
-          >
-            <Ionicons name="trash" size={30} color="#eeeeee" />
-          </TouchableOpacity>
-        )}
-      </View>
+        </ImageBackground>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };

@@ -1,18 +1,26 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import albumArt from "album-art";
 
 import { getData } from "../../../AyncStorage";
 import { colors } from "../../../misc";
 
-import { MotiView } from "moti";
+import { AnimatePresence, MotiImage, MotiView } from "moti";
 import toggleStore from "../../../store/toggleStore";
 import itemStore from "../../../store/itemStore";
 
 const MusicList = ({ item, index }) => {
-  const { sorted, toggleSorted } = toggleStore();
+  const { toggleSorted } = toggleStore();
   const { musicItem, musicState } = itemStore();
 
   const [itemPressed, setItemPressed] = useState(false);
@@ -29,23 +37,18 @@ const MusicList = ({ item, index }) => {
       console.log(e);
     }
   };
+
   return (
     <MotiView
-      from={{ height: itemPressed ? 120 : 95 }}
-      animate={{ height: itemPressed ? 120 : 95 }}
+      animate={{ height: itemPressed ? 135 : 95 }}
       transition={{ type: "timing", duration: 100 }}
       style={{
-        backgroundColor: colors.itembg,
+        // backgroundColor: " rgba(255, 255, 255, 0.5)",
+        flex: 1,
 
-        elevation: 5,
-        marginVertical: 8,
+        marginTop: 8,
         marginHorizontal: 16,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
-        borderColor: colors.additionalOne,
-        borderWidth: 2,
+        borderRadius: 8,
       }}
     >
       <TouchableOpacity
@@ -60,86 +63,109 @@ const MusicList = ({ item, index }) => {
         <View
           style={{
             flexDirection: "row",
-            alignItems: itemPressed ? "stretch" : "center",
-            height: "100%",
-            overflow: "hidden",
+            alignItems: itemPressed ? "flex-start" : "center",
+            justifyContent: "flex-start",
           }}
         >
+          <MotiView
+            animate={{ marginTop: itemPressed ? 15 : 0 }}
+            transition={{ type: "timing", duration: 200 }}
+          >
+            <ImageBackground
+              source={{ uri: item?.image ? item?.image : null }}
+              style={{
+                height: 80,
+                width: 80,
+                borderRadius: 5,
+                marginLeft: 9,
+              }}
+              imageStyle={{ borderRadius: 5 }}
+            >
+              {itemPressed ? (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: " rgba(255, 255, 255, 0.5)",
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  activeOpacity={0.5}
+                >
+                  <Ionicons
+                    name="trash"
+                    size={35}
+                    color="black"
+                    onPress={() => {
+                      deleteData();
+                    }}
+                  />
+                </TouchableOpacity>
+              ) : null}
+            </ImageBackground>
+          </MotiView>
+
           <View
             style={{
               padding: 10,
               paddingHorizontal: 20,
-              backgroundColor: colors.outline,
-              width: "75%",
+
               borderRadius: 5,
-              elevation: 10,
-              shadowColor: colors.add,
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
+
+              alignItems: "flex-start",
               shadowRadius: 2,
             }}
           >
             <Text
+              numberOfLines={2}
               style={{
-                paddingBottom: 5,
-                fontSize: 20,
+                paddingBottom: item?.name.length >= 20 ? 2 : 5,
+                fontSize: item?.name.length >= 20 ? 15 : 20,
                 fontWeight: "bold",
-                color: "#eeeeee",
+                color: "black",
+                maxWidth: 250,
               }}
             >
               {item?.name}
             </Text>
-            <Text style={{ paddingBottom: 5, color: "#eeeeee", fontSize: 15 }}>
+            <Text style={{ paddingBottom: 5, color: "black", fontSize: 15 }}>
               {item?.author}
             </Text>
-            <Text
-              style={{ fontStyle: "italic", color: "#eeeeee", fontSize: 12 }}
-            >
+
+            <Text style={{ fontStyle: "italic", color: "black", fontSize: 12 }}>
               {item?.length}
             </Text>
-            {itemPressed ? (
-              <Text style={{ fontSize: 12, color: "#eeeeee", paddingTop: 10 }}>
-                {item?.finish}
-              </Text>
-            ) : null}
-          </View>
-          <View
-            style={{ paddingTop: itemPressed ? 10 : 0, alignItems: "center" }}
-          >
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: colors.outline,
-                height: 60,
-                width: 60,
-                borderRadius: 15,
-                marginHorizontal: 10,
-                borderWidth: 2,
-                borderColor: colors.additionalOne,
-              }}
-            >
-              <Text
-                style={{ fontWeight: "bold", fontSize: 30, color: "#eeeeee" }}
-              >
-                {item?.number}
-              </Text>
-            </View>
-            {itemPressed ? (
-              <TouchableOpacity
-                style={{ paddingTop: 10 }}
-                activeOpacity={0.5}
-                onPress={() => {
-                  deleteData();
-                }}
-              >
-                <Ionicons name="trash" size={28} color="#eeeeee" />
-              </TouchableOpacity>
-            ) : null}
           </View>
         </View>
       </TouchableOpacity>
+      {itemPressed ? (
+        <MotiView
+          transition={{ delay: 0, damping: 25, mass: 1 }}
+          from={{
+            opacity: 0,
+            translateX: 20,
+          }}
+          animate={{
+            opacity: 1,
+            translateX: 0,
+          }}
+          exit={{
+            opacity: 0,
+            translateX: 0,
+          }}
+          style={{
+            flex: 1,
+            flexDirection: "row",
+
+            justifyContent: "space-between",
+            paddingTop: 10,
+            paddingHorizontal: 10,
+          }}
+        >
+          <Text>length: {item?.length}</Text>
+          <Text style={{ fontWeight: "bold" }}>rating: {item?.number}</Text>
+          <Text>finish date: {item?.finish}</Text>
+        </MotiView>
+      ) : null}
     </MotiView>
   );
 };

@@ -1,14 +1,22 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import { colors } from "../misc";
+
 import Ionicons from "@expo/vector-icons/Ionicons";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+
 import ModalButton from "./ModalButton";
 
-const DatePicker = ({ onChange, onPress, item, dateformat, text }) => {
+const DatePicker = ({
+  onPress,
+  item,
+  dateformat,
+  text,
+  style,
+  wrapperStyle,
+  textStyle,
+}) => {
   return (
     <View>
       <ModalButton
+        wrapperStyle={{ ...wrapperStyle }}
         fontstyle={{
           fontWeight: "bold",
           fontSize: 18,
@@ -20,6 +28,7 @@ const DatePicker = ({ onChange, onPress, item, dateformat, text }) => {
           elevation: 0,
           borderRadius: 10,
           margin: 5,
+          ...style,
         }}
         name={
           item ? (
@@ -39,6 +48,7 @@ const DatePicker = ({ onChange, onPress, item, dateformat, text }) => {
                   paddingTop: 5,
                   paddingBottom: 5,
                   color: "white",
+                  ...textStyle,
                 }}
               >
                 {text}

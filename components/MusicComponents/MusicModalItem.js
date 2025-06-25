@@ -14,6 +14,8 @@ import { colors } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import toggleStore from "../../store/toggleStore";
 import itemStore from "../../store/itemStore";
+import DatePicker from "../DatePicker";
+import albumArt from "album-art";
 
 const MusicModalItem = ({}) => {
   const { musicItem, musicState } = itemStore();
@@ -23,7 +25,11 @@ const MusicModalItem = ({}) => {
   const [itemName, setItemName] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [itemLength, setitemLength] = useState("");
+
+  const [finish, setFinish] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
   const [itemFinishDate, setItemFinishDate] = useState("");
+  const [albumImage, setAlbumImage] = useState("");
 
   const [showPicker, setShowPicker] = useState(false);
 
@@ -36,9 +42,13 @@ const MusicModalItem = ({}) => {
   useEffect(() => {
     setPressed(numbers[2]);
   }, []);
-
   const handleMusicItem = async () => {
     try {
+      const res = await albumArt(authorName, {
+        album: itemName,
+        size: "medium",
+      });
+
       const jsonValue = JSON.stringify([
         {
           name: itemName,
@@ -47,12 +57,13 @@ const MusicModalItem = ({}) => {
           finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
           number: pressed,
           id: new Date() + Math.random(),
+          image: res,
         },
         ...musicItem,
       ]);
       storeData("musicItem", jsonValue);
-      toggleModal();
 
+      toggleModal();
       const musicItemData = await getData("musicItem");
       const parsed = JSON.parse(musicItemData);
       musicState(parsed);
@@ -65,9 +76,8 @@ const MusicModalItem = ({}) => {
     <View>
       <View
         style={{
-          backgroundColor: colors.outline,
           height: 370,
-
+          backgroundColor: colors.outline,
           marginHorizontal: 10,
           borderRadius: 10,
           elevation: 2,
@@ -157,8 +167,9 @@ const MusicModalItem = ({}) => {
             </View>
             <View
               style={{
-                flex: 1,
                 flexDirection: "row",
+                paddingVertical: 5,
+                alignItems: "center",
               }}
             >
               <View
@@ -169,7 +180,6 @@ const MusicModalItem = ({}) => {
                   width: "30%",
                   height: 60,
                   borderRadius: 10,
-                  marginTop: 10,
                 }}
               >
                 <TextInput
@@ -196,32 +206,18 @@ const MusicModalItem = ({}) => {
                   }}
                 />
               </View>
-              <View style={{ marginTop: 15, paddingLeft: 10 }}>
-                <ModalButton
-                  fontstyle={{
-                    fontWeight: "bold",
-                    fontSize: 18,
-                    color: "white",
+              <View style={{ left: 4 }}>
+                <DatePicker
+                  style={{ height: 60, width: 195 }}
+                  textStyle={{
+                    display: "none",
                   }}
-                  style={{
-                    width: 195,
-                    height: 60,
-                    elevation: 0,
-                    borderRadius: 10,
-                  }}
-                  name={
-                    itemFinishDate ? (
-                      s
-                    ) : (
-                      <Ionicons
-                        name="calendar-outline"
-                        size={28}
-                        color={colors.placeholder}
-                      />
-                    )
-                  }
+                  wrapperStyle={{ paddingTop: 0 }}
+                  item={itemFinishDate}
+                  dateformat={s}
                   onPress={() => {
                     setShowPicker(!showPicker);
+                    setFinish(!finish);
                   }}
                 />
                 {/* DATEPICKER//////////////////////////////////////////////////////// */}
@@ -232,7 +228,12 @@ const MusicModalItem = ({}) => {
                     mode="date"
                     value={new Date()}
                     onChange={(text) => (
-                      setItemFinishDate(text.nativeEvent.timestamp),
+                      console.log(finish),
+                      finish && text.type == "set"
+                        ? (setItemFinishDate(text.nativeEvent.timestamp),
+                          setFinish(!finish),
+                          setIsFinished(true))
+                        : null,
                       setShowPicker(!showPicker)
                     )}
                   />
@@ -245,7 +246,7 @@ const MusicModalItem = ({}) => {
                 width: "90%",
                 flexDirection: "row",
                 borderRadius: 10,
-                top: 80,
+
                 backgroundColor: colors.itembg,
 
                 justifyContent: "space-around",
