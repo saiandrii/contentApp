@@ -1,5 +1,5 @@
 import { Keyboard, StyleSheet, View } from "react-native";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import AddItemButton from "./AddItemButton";
 
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -7,14 +7,15 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { AnimatePresence, MotiView } from "moti";
-import toggleStore from "../store/toggleStore";
-import itemStore from "../store/itemStore";
+import toggleStore from "../../store/toggleStore";
+import itemStore from "../../store/itemStore";
+import { useNavigation } from "@react-navigation/native";
 
 const ActionMenu = ({}) => {
-  const [dialOpen, setDialOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   const {
+    dialOpen,
     searchPressed,
     editModal,
     modalVisible,
@@ -24,12 +25,24 @@ const ActionMenu = ({}) => {
     toggleMusic,
     toggleBooks,
     toggleFilms,
+    toggleDial,
   } = toggleStore();
 
-  const { filtered, filteredString } = itemStore();
+  const { filteredString } = itemStore();
+  const navigation = useNavigation();
 
   return modalVisible || editModal ? null : (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        height: "100%",
+        position: "absolute",
+        paddingHorizontal: 20,
+        paddingVertical: 40,
+        justifyContent: "flex-end",
+        alignSelf: "flex-end",
+      }}
+    >
       <MotiView style={{ flexDirection: "row-reverse", alignItems: "center" }}>
         <AddItemButton
           animateIcon={{ scale: expanded ? 0.7 : 1 }}
@@ -41,7 +54,7 @@ const ActionMenu = ({}) => {
             marginLeft: 10,
           }}
           onPress={() => {
-            setExpanded(!expanded), setDialOpen(!dialOpen);
+            setExpanded(!expanded), toggleDial(!dialOpen);
           }}
           icon={<FontAwesome6 name="add" size={35} color="#EEEEEE" />}
         />
@@ -123,7 +136,11 @@ const ActionMenu = ({}) => {
             >
               <AddItemButton
                 onPress={() => {
-                  toggleSearch(), filteredString(""), Keyboard.dismiss();
+                  navigation.navigate("Search");
+                  toggleDial(false),
+                    toggleSearch(false),
+                    filteredString(""),
+                    Keyboard.dismiss();
                 }}
                 icon={
                   searchPressed ? (

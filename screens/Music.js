@@ -50,6 +50,7 @@ const Music = ({ navigation }) => {
       <FlatList
         contentContainerStyle={{
           paddingTop: 95,
+          paddingBottom: 25,
         }}
         showsVerticalScrollIndicator={false}
         data={musicItem}

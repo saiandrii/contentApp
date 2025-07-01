@@ -4,14 +4,24 @@ const toggleStore = create((set) => ({
   modalVisible: false,
   editModal: false,
   sorted: false,
+  searchFocused: false,
+  searchPressed: false,
   firstAddBooks: false,
   firstAddMusic: false,
   firstAddFilms: false,
-  searchPressed: false,
+  dialOpen: false,
 
+  toggleDial: (text) =>
+    set((state) => ({
+      dialOpen: (state.dialOpen = text),
+    })),
   toggleEditModal: (text) =>
     set((state) => ({
       editModal: (state.editModal = text),
+    })),
+  toggleSearchFocused: (text) =>
+    set((state) => ({
+      searchFocused: (state.searchFocused = text),
     })),
   toggleSearch: (text) =>
     set((state) => ({

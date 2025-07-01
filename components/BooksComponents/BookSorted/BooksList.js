@@ -142,7 +142,7 @@ const BooksList = ({ item, index }) => {
           height: item?.finish !== "Invalid Date" ? "100%" : 190,
           width: 120,
           backgroundColor: colors.placeholder,
-          elevation: 5,
+          elevation: 2,
           marginHorizontal: 14,
           borderRadius: 5,
 

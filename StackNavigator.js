@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Main from "./screens/Main";
 import Search from "./screens/Search";
-import ActionMenu from "./components/ActionMenu";
 
 const Stack = createStackNavigator();
 const StackNavigator = ({ navigation }) => {
@@ -20,6 +19,7 @@ const StackNavigator = ({ navigation }) => {
         />
         <Stack.Screen
           options={{
+            animation: "slide_from_bottom",
             title: "",
             headerShown: false,
           }}

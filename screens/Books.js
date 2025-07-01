@@ -10,16 +10,14 @@ import Popup from "../components/Popup";
 
 import BookModalAdditem from "../components/BooksComponents/BookModal/BookModalAdditem";
 
-import FilterComponent from "../components/FilterComponent";
+import FilterComponent from "../components/FilterComponent/FilterComponent";
 
 import toggleStore from "../store/toggleStore";
 import itemStore from "../store/itemStore";
 
 const Books = ({ navigation }) => {
-  const { filtered, bookItem, bookItemArray } = itemStore();
+  const { bookItem, bookItemArray } = itemStore();
   const { sorted } = toggleStore();
-
-  const [filteredArray, setFilteredArray] = useState([]);
 
   const scrollRef = useRef();
 
@@ -57,41 +55,17 @@ const Books = ({ navigation }) => {
     handleAsync();
   }, []);
 
-  const filteredBooks = bookItem.filter((element) => {
-    const stringElement = element?.name.toLowerCase().replaceAll(" ", "");
-
-    const stringElementAuthor = element?.author
-      .toLowerCase()
-      .replaceAll(" ", "");
-
-    const filterElement = filtered?.toLowerCase().replaceAll(" ", "");
-
-    const newItems =
-      stringElement?.includes(filterElement) ||
-      stringElementAuthor?.includes(filterElement);
-
-    return newItems;
-  });
-
-  useEffect(() => {
-    if (filtered.length === 0) {
-      setFilteredArray([]);
-    } else {
-      setFilteredArray(filteredBooks);
-    }
-  }, [filtered]);
-
   return (
     <View style={{ flex: 1, backgroundColor: "#eeeeee" }}>
       {sorted ? <Popup /> : null}
 
       <FlatList
         bounces={false}
-        ListHeaderComponent={<FilterComponent />}
-        contentContainerStyle={{ paddingTop: 95 }}
+        // ListHeaderComponent={<FilterComponent />}
+        contentContainerStyle={{ paddingTop: 95, paddingBottom: 25 }}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
-        data={filteredArray.length > 0 ? filteredArray : bookItem}
+        data={bookItem}
         renderItem={({ item }) => {
           return <BooksItem item={item} />;
         }}

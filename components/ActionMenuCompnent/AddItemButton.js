@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-import { colors } from "../misc";
+import { colors } from "../../misc";
 import { MotiView } from "moti";
 
 const AddItemButton = ({

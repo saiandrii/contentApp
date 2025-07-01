@@ -1,7 +1,7 @@
 import { StatusBar, View } from "react-native";
 import StackNavigator from "./StackNavigator";
 import AddItemModal from "../contentapp/components/AddItemModal";
-import ActionMenu from "./components/ActionMenu";
+
 import BookModalAdditem from "./components/BooksComponents/BookModal/BookModalAdditem";
 export default function App() {
   return (
@@ -27,7 +27,6 @@ export default function App() {
       >
         <AddItemModal />
         <BookModalAdditem />
-        <ActionMenu />
       </View>
     </>
   );

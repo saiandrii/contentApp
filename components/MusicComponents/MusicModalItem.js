@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TextInput,
@@ -19,6 +20,7 @@ import albumArt from "album-art";
 
 const MusicModalItem = ({}) => {
   const { musicItem, musicState } = itemStore();
+  const { toggleModal } = toggleStore();
 
   const [pressed, setPressed] = useState();
 
@@ -29,11 +31,9 @@ const MusicModalItem = ({}) => {
   const [finish, setFinish] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [itemFinishDate, setItemFinishDate] = useState("");
-  const [albumImage, setAlbumImage] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-
-  const { toggleModal } = toggleStore();
 
   const numbers = [1, 2, 3, 4, 5];
 
@@ -43,12 +43,12 @@ const MusicModalItem = ({}) => {
     setPressed(numbers[2]);
   }, []);
   const handleMusicItem = async () => {
+    setIsLoading(true);
     try {
       const res = await albumArt(authorName, {
         album: itemName,
         size: "medium",
       });
-
       const jsonValue = JSON.stringify([
         {
           name: itemName,
@@ -61,12 +61,14 @@ const MusicModalItem = ({}) => {
         },
         ...musicItem,
       ]);
+
       storeData("musicItem", jsonValue);
 
-      toggleModal();
       const musicItemData = await getData("musicItem");
       const parsed = JSON.parse(musicItemData);
       musicState(parsed);
+      toggleModal();
+      setIsLoading(false);
     } catch (e) {
       console.log(e);
     }
@@ -282,7 +284,13 @@ const MusicModalItem = ({}) => {
       itemLength.length === 5 ? (
         <ModalButton
           onPress={() => handleMusicItem()}
-          name="add item"
+          name={
+            isLoading ? (
+              <ActivityIndicator size={"large"} color={colors.additionalOne} />
+            ) : (
+              "add item"
+            )
+          }
           fontstyle={{ fontSize: 20 }}
           style={{
             marginBottom: 10,
