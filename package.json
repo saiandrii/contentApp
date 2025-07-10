@@ -23,6 +23,8 @@
     "expo-status-bar": "~2.2.3",
     "lodash.debounce": "^4.0.8",
     "moti": "^0.30.0",
+    "movie-art": "^3.0.1",
+    "movie-info": "^3.0.2",
     "react": "19.0.0",
     "react-native": "0.79.2",
     "react-native-bouncy-checkbox": "^4.1.2",

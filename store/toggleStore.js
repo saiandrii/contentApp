@@ -4,6 +4,8 @@ const toggleStore = create((set) => ({
   modalVisible: false,
   editModal: false,
   sorted: false,
+  card: false,
+  cardToggle: false,
   searchFocused: false,
   searchPressed: false,
   firstAddBooks: false,
@@ -11,6 +13,10 @@ const toggleStore = create((set) => ({
   firstAddFilms: false,
   dialOpen: false,
 
+  cardToggle: (text) =>
+    set((state) => ({
+      card: (state.card = text),
+    })),
   toggleDial: (text) =>
     set((state) => ({
       dialOpen: (state.dialOpen = text),

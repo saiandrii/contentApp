@@ -138,13 +138,13 @@ const BooksModalItem = ({}) => {
                 name
               </Text>
               <TextInput
-                value={itemName}
                 onChangeText={(text) => setItemName(text)}
                 placeholder="item name..."
                 placeholderTextColor={colors.placeholder}
                 maxLength={60}
                 numberOfLines={1}
                 style={{
+                  width: "100%",
                   paddingHorizontal: 20,
                   fontSize: 18,
                   fontWeight: "bold",
@@ -184,6 +184,7 @@ const BooksModalItem = ({}) => {
                 numberOfLines={2}
                 multiline
                 style={{
+                  width: "100%",
                   fontWeight: "bold",
                   color: "white",
                   paddingHorizontal: 20,

@@ -3,6 +3,7 @@ import StackNavigator from "./StackNavigator";
 import AddItemModal from "../contentapp/components/AddItemModal";
 
 import BookModalAdditem from "./components/BooksComponents/BookModal/BookModalAdditem";
+import FilmsModalCard from "./components/FilmsComponent/FilmsModalCard";
 export default function App() {
   return (
     <>

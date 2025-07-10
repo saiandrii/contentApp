@@ -19,12 +19,12 @@ import { MotiView } from "moti";
 const Search = () => {
   const navigation = useNavigation();
 
-  const { bookItem, musicItem, filtered } = itemStore();
+  const { bookItem, musicItem, filtered, filmItem } = itemStore();
   const { searchFocused } = toggleStore();
 
   const [filteredArray, setFilteredArray] = useState([]);
 
-  const allItemsArray = [...bookItem, ...musicItem];
+  const allItemsArray = [...bookItem, ...musicItem, ...filmItem];
 
   const filteredBooks = allItemsArray.filter((element) => {
     const stringElement = element?.name.toLowerCase().replaceAll(" ", "");

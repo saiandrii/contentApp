@@ -6,7 +6,17 @@ const itemStore = create((set) => ({
   bookItem: [],
   bookItemData: [],
   musicItem: [],
+  filmItem: [],
+  pickedFilmItem: [],
 
+  filmState: (text) =>
+    set((state) => ({
+      filmItem: (state.filmItem = text),
+    })),
+  pickedFilmItemState: (text) =>
+    set((state) => ({
+      pickedFilmItem: (state.pickedFilmItem = text),
+    })),
   musicState: (text) =>
     set((state) => ({
       musicItem: (state.musicItem = text),

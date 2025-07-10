@@ -1,5 +1,6 @@
 import {
   Dimensions,
+  KeyboardAvoidingView,
   Modal,
   Pressable,
   SafeAreaView,
@@ -15,6 +16,7 @@ import FilmsModalItem from "./FilmsComponent/FilmsModalItem";
 
 import toggleStore from "../store/toggleStore";
 import itemStore from "../store/itemStore";
+import { StatusBar } from "expo-status-bar";
 
 const ModalComponent = () => {
   const { image, imageState } = itemStore();
@@ -36,6 +38,7 @@ const ModalComponent = () => {
       animationType="fade"
       transparent={true}
       backdropOpacity={0.3}
+      // navigationBarTranslucent={true}
     >
       <Pressable
         onPressOut={() => (
@@ -55,7 +58,7 @@ const ModalComponent = () => {
         }}
       >
         <TouchableWithoutFeedback>
-          <View>
+          <KeyboardAvoidingView>
             <SafeAreaView>
               <View
                 style={{
@@ -73,7 +76,7 @@ const ModalComponent = () => {
                 ) : null}
               </View>
             </SafeAreaView>
-          </View>
+          </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </Pressable>
     </Modal>

@@ -121,6 +121,7 @@ const MusicModalItem = ({}) => {
                 maxLength={60}
                 numberOfLines={1}
                 style={{
+                  width: "100%",
                   paddingHorizontal: 20,
                   fontSize: 18,
                   fontWeight: "bold",
@@ -160,6 +161,7 @@ const MusicModalItem = ({}) => {
                 numberOfLines={2}
                 multiline
                 style={{
+                  width: "100%",
                   fontWeight: "bold",
                   color: "white",
                   paddingHorizontal: 20,
@@ -189,9 +191,9 @@ const MusicModalItem = ({}) => {
                   onChangeText={(text) => {
                     if (text.length === 2) {
                       (text += ":"), setitemLength(text);
-                    } else if (text.endsWith("::")) {
-                      text.replace(/:+/g, ":");
-                      setitemLength(text);
+                    }
+                    if (text.endsWith("::")) {
+                      (text = text.replace(/:+/g, ":")), setitemLength(text);
                     } else {
                       setitemLength(text);
                     }
@@ -230,7 +232,6 @@ const MusicModalItem = ({}) => {
                     mode="date"
                     value={new Date()}
                     onChange={(text) => (
-                      console.log(finish),
                       finish && text.type == "set"
                         ? (setItemFinishDate(text.nativeEvent.timestamp),
                           setFinish(!finish),

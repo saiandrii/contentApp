@@ -133,9 +133,7 @@ const BooksList = ({ item, index }) => {
         key={item?.id}
         onPressOut={() => setDots(false)}
         onPress={() => {
-          setItemPressed(!itemPressed),
-            toggleSorted(false),
-            console.log(item?.picture);
+          setItemPressed(!itemPressed), toggleSorted(false);
         }}
         activeOpacity={0.9}
         style={{

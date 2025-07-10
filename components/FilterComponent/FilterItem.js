@@ -4,6 +4,7 @@ import { MotiView } from "moti";
 import { colors } from "../../misc";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Entypo from "@expo/vector-icons/Entypo";
+import Feather from "@expo/vector-icons/Feather";
 
 const FilterItem = ({ item }) => {
   const [itemPressed, setItemPressed] = useState();
@@ -35,7 +36,7 @@ const FilterItem = ({ item }) => {
             width: "70%",
           }}
         >
-          {item?.length ? (
+          {item?.length && !item?.year ? (
             <MaterialIcons
               name="audiotrack"
               size={24}
@@ -43,6 +44,8 @@ const FilterItem = ({ item }) => {
             />
           ) : item?.pages ? (
             <Entypo name="book" size={24} color={colors.additionalOne} />
+          ) : item?.year ? (
+            <Feather name="film" size={24} color={colors.additionalOne} />
           ) : null}
           <View style={{ paddingLeft: 20 }}>
             <Text

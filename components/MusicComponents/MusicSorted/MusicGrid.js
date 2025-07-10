@@ -31,7 +31,7 @@ const MusicGrid = ({ item }) => {
       console.log(e);
     }
   };
-  // console.log(item.image);
+
   return (
     <TouchableOpacity
       key={item?.id}
@@ -45,7 +45,7 @@ const MusicGrid = ({ item }) => {
         elevation: 5,
         alignItems: "center",
         justifyContent: "center",
-        // backgroundColor: colors.itembg,
+
         marginTop: 8,
         marginBottom: 4,
         borderRadius: 5,

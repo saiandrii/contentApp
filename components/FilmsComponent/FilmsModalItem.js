@@ -1,4 +1,6 @@
 import {
+  ActivityIndicator,
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -13,9 +15,12 @@ import { colors } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import itemStore from "../../store/itemStore";
 import toggleStore from "../../store/toggleStore";
+import movieInfo from "movie-info";
+import movieArt from "movie-art";
+import DatePicker from "../DatePicker";
 
 const FilmsModalItem = ({}) => {
-  const { musicItem, musicState } = itemStore();
+  const { filmItem, filmState } = itemStore();
   const { toggleModal } = toggleStore();
 
   const [pressed, setPressed] = useState();
@@ -25,7 +30,10 @@ const FilmsModalItem = ({}) => {
   const [authorName, setAuthorName] = useState("");
   const [itemLength, setitemLength] = useState("");
   const [itemFinishDate, setItemFinishDate] = useState("");
-
+  const [itemYear, setItemYear] = useState("");
+  const [isFinished, setIsFinished] = useState(false);
+  const [finish, setFinish] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const numbers = [1, 2, 3, 4, 5];
 
   var s = new Date(itemFinishDate).toLocaleDateString("en-GB");
@@ -34,25 +42,46 @@ const FilmsModalItem = ({}) => {
     setPressed(numbers[2]);
   }, []);
 
-  const handleMusicItem = async () => {
+  const handleFilmItem = async () => {
     try {
-      const jsonValue = JSON.stringify([
-        {
-          name: itemName,
-          author: authorName,
-          length: itemLength,
-          finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
-          number: pressed,
-          id: new Date() + Math.random(),
-        },
-        ...musicItem,
-      ]);
-      storeData("musicItem", jsonValue);
-      toggleModal(false);
+      setIsLoading(true);
 
-      const musicItemData = await getData("musicItem");
-      const parsed = JSON.parse(musicItemData);
-      musicState(parsed);
+      await movieInfo(itemName, itemYear).then(function (response) {
+        if (Object.keys(response).length != 0) {
+          const handleItem = async () => {
+            const resImage = await movieArt(itemName, itemYear);
+            console.log(resImage);
+            const jsonValue = JSON.stringify([
+              {
+                name: itemName,
+                author: authorName,
+                length: itemLength,
+                finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
+                number: pressed,
+                id: new Date() + Math.random(),
+                year: itemYear,
+                image: resImage,
+                description: response?.overview,
+              },
+              ...filmItem,
+            ]);
+            storeData("filmItem", jsonValue);
+            toggleModal(false);
+
+            const filmItemData = await getData("filmItem");
+            const parsed = JSON.parse(filmItemData);
+            filmState(parsed);
+            setIsLoading(false);
+          };
+          handleItem();
+        } else {
+          Alert.alert(
+            "There is a problem!",
+            "Check if the name of movie is correct, or check your internet conneciton."
+          );
+          setIsLoading(false);
+        }
+      });
     } catch (e) {
       console.log(e);
     }
@@ -63,7 +92,7 @@ const FilmsModalItem = ({}) => {
       <View
         style={{
           backgroundColor: colors.outline,
-          height: firstAdd === true ? 355 : 370,
+          height: 370,
 
           marginHorizontal: 10,
           borderRadius: 10,
@@ -101,7 +130,7 @@ const FilmsModalItem = ({}) => {
               <TextInput
                 value={itemName}
                 onChangeText={(text) => setItemName(text)}
-                placeholder="FILM name..."
+                placeholder="film name..."
                 placeholderTextColor={colors.placeholder}
                 maxLength={60}
                 numberOfLines={1}
@@ -110,6 +139,7 @@ const FilmsModalItem = ({}) => {
                   fontSize: 18,
                   fontWeight: "bold",
                   color: "white",
+                  width: "100%",
                 }}
               />
             </View>
@@ -149,13 +179,20 @@ const FilmsModalItem = ({}) => {
                   color: "white",
                   paddingHorizontal: 20,
                   fontSize: 18,
+                  width: "100%",
                 }}
               />
             </View>
             <View
               style={{
-                flex: 1,
+                width: "96%",
+
                 flexDirection: "row",
+
+                paddingTop: 10,
+                paddingBottom: 10,
+                alignItems: "center",
+                justifyContent: "space-evenly",
               }}
             >
               <View
@@ -163,10 +200,9 @@ const FilmsModalItem = ({}) => {
                   backgroundColor: colors.itembg,
                   justifyContent: "center",
                   alignItems: "center",
-                  width: "30%",
+                  width: "28%",
                   height: 60,
                   borderRadius: 10,
-                  marginTop: 10,
                 }}
               >
                 <TextInput
@@ -174,9 +210,9 @@ const FilmsModalItem = ({}) => {
                   onChangeText={(text) => {
                     if (text.length === 2) {
                       (text += ":"), setitemLength(text);
-                    } else if (text.endsWith("::")) {
-                      text.replace(/:+/g, ":");
-                      setitemLength(text);
+                    }
+                    if (text.endsWith("::")) {
+                      (text = text.replace(/:+/g, ":")), setitemLength(text);
                     } else {
                       setitemLength(text);
                     }
@@ -193,32 +229,46 @@ const FilmsModalItem = ({}) => {
                   }}
                 />
               </View>
-              <View style={{ marginTop: 15, paddingLeft: 10 }}>
-                <ModalButton
-                  fontstyle={{
-                    fontWeight: "bold",
-                    fontSize: 18,
-                    color: "white",
+              <View
+                style={{
+                  backgroundColor: colors.itembg,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "28%",
+                  height: 60,
+                  borderRadius: 10,
+                }}
+              >
+                <TextInput
+                  value={itemYear}
+                  onChangeText={(text) => {
+                    setItemYear(text);
                   }}
+                  keyboardType="numeric"
+                  placeholder="year"
+                  placeholderTextColor={colors.placeholder}
+                  maxLength={5}
                   style={{
-                    width: 195,
-                    height: 60,
-                    elevation: 0,
-                    borderRadius: 10,
+                    fontWeight: "bold",
+                    color: "white",
+
+                    fontSize: 18,
                   }}
-                  name={
-                    itemFinishDate ? (
-                      s
-                    ) : (
-                      <Ionicons
-                        name="calendar-outline"
-                        size={28}
-                        color={colors.placeholder}
-                      />
-                    )
-                  }
+                />
+              </View>
+              <View style={{}}>
+                <DatePicker
+                  style={{ height: 60, width: 100, margin: 0 }}
+                  textStyle={{
+                    display: "none",
+                  }}
+                  fontStyle={{ fonstSize: 10 }}
+                  wrapperStyle={{ paddingTop: 0 }}
+                  item={itemFinishDate}
+                  dateformat={s}
                   onPress={() => {
                     setShowPicker(!showPicker);
+                    setFinish(!finish);
                   }}
                 />
                 {/* DATEPICKER//////////////////////////////////////////////////////// */}
@@ -229,7 +279,11 @@ const FilmsModalItem = ({}) => {
                     mode="date"
                     value={new Date()}
                     onChange={(text) => (
-                      setItemFinishDate(text.nativeEvent.timestamp),
+                      finish && text.type == "set"
+                        ? (setItemFinishDate(text.nativeEvent.timestamp),
+                          setFinish(!finish),
+                          setIsFinished(true))
+                        : null,
                       setShowPicker(!showPicker)
                     )}
                   />
@@ -242,7 +296,7 @@ const FilmsModalItem = ({}) => {
                 width: "90%",
                 flexDirection: "row",
                 borderRadius: 10,
-                top: 80,
+
                 backgroundColor: colors.itembg,
 
                 justifyContent: "space-around",
@@ -277,8 +331,14 @@ const FilmsModalItem = ({}) => {
       {(itemName, authorName, itemFinishDate).length !== 0 &&
       itemLength.length === 5 ? (
         <ModalButton
-          onPress={() => handleMusicItem()}
-          name="add item"
+          onPress={() => handleFilmItem()}
+          name={
+            isLoading ? (
+              <ActivityIndicator size={"large"} color={colors.additionalOne} />
+            ) : (
+              "add item"
+            )
+          }
           fontstyle={{ fontSize: 20 }}
           style={{
             marginBottom: 10,

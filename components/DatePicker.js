@@ -12,15 +12,17 @@ const DatePicker = ({
   style,
   wrapperStyle,
   textStyle,
+  fontStyle,
 }) => {
   return (
     <View>
       <ModalButton
         wrapperStyle={{ ...wrapperStyle }}
-        fontstyle={{
+        fontStyle={{
           fontWeight: "bold",
           fontSize: 18,
           color: "white",
+          ...fontStyle,
         }}
         style={{
           width: 148,
