@@ -29,6 +29,9 @@ const Music = ({ navigation }) => {
             ...musicItem,
           ]);
           await storeData("musicItem", jsonValue);
+          const musicItemData = await getData("musicItem");
+          const parsed = JSON.parse(musicItemData);
+          musicState(parsed);
         } catch (e) {
           console.log(e);
         }

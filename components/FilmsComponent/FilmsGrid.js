@@ -1,19 +1,13 @@
-import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, Image, View, Text } from "react-native";
 
 import toggleStore from "../../store/toggleStore";
-import FilmsModalCard from "./FilmsModalCard";
+
 import itemStore from "../../store/itemStore";
+import { colors } from "../../misc";
 
 const FilmsGrid = ({ item }) => {
   const { cardToggle } = toggleStore();
-  const { pickedFilmItemState, filmItem } = itemStore();
+  const { pickedFilmItemState } = itemStore();
 
   return (
     <TouchableOpacity
@@ -22,11 +16,7 @@ const FilmsGrid = ({ item }) => {
         pickedFilmItemState(item);
       }}
       activeOpacity={0.7}
-      style={{
-        paddingTop: 15,
-        paddingHorizontal: 15,
-        paddingBottom: 10,
-      }}
+      style={{ paddingHorizontal: 10, paddingTop: 15 }}
     >
       {item?.image ? (
         <Image
@@ -39,8 +29,20 @@ const FilmsGrid = ({ item }) => {
           source={{ uri: item?.image }}
         />
       ) : (
-        <View style={{ width: 150, height: 250, backgroundColor: "red" }}>
-          <Text>{item?.name}</Text>
+        <View
+          style={{
+            borderRadius: 5,
+            width: 150,
+            height: 250,
+            backgroundColor: colors.placeholder,
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingVertical: 15,
+          }}
+        >
+          <Text style={{ fontSize: 18, textAlign: "center" }}>
+            {item?.name}
+          </Text>
           <Text>{item?.author}</Text>
         </View>
       )}

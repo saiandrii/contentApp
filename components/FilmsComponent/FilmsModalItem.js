@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import ModalButton from "../ModalButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { getData, storeData } from "../../AyncStorage";
-import { colors } from "../../misc";
+import { colors, screenWidth } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import itemStore from "../../store/itemStore";
 import toggleStore from "../../store/toggleStore";
@@ -50,7 +50,7 @@ const FilmsModalItem = ({}) => {
         if (Object.keys(response).length != 0) {
           const handleItem = async () => {
             const resImage = await movieArt(itemName, itemYear);
-            console.log(resImage);
+
             const jsonValue = JSON.stringify([
               {
                 name: itemName,
@@ -62,6 +62,7 @@ const FilmsModalItem = ({}) => {
                 year: itemYear,
                 image: resImage,
                 description: response?.overview,
+                type: "film",
               },
               ...filmItem,
             ]);
@@ -200,7 +201,7 @@ const FilmsModalItem = ({}) => {
                   backgroundColor: colors.itembg,
                   justifyContent: "center",
                   alignItems: "center",
-                  width: "28%",
+                  width: "30%",
                   height: 60,
                   borderRadius: 10,
                 }}
@@ -256,9 +257,9 @@ const FilmsModalItem = ({}) => {
                   }}
                 />
               </View>
-              <View style={{}}>
+              <View>
                 <DatePicker
-                  style={{ height: 60, width: 100, margin: 0 }}
+                  style={styles.dateStyle}
                   textStyle={{
                     display: "none",
                   }}
@@ -374,5 +375,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.outline,
+  },
+  dateStyle: {
+    height: 60,
+    width: screenWidth == 448 ? 120 : 100,
+    margin: 0,
   },
 });

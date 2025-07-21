@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TextInput,
@@ -8,7 +9,7 @@ import {
 import React, { useState } from "react";
 import ModalButton from "../ModalButton";
 import { getData, storeData } from "../../AyncStorage";
-import { colors } from "../../misc";
+import { colors, screenWidth } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DatePicker from "../DatePicker";
 import { MotiView } from "moti";
@@ -35,7 +36,7 @@ const BooksModalItem = ({}) => {
   const [itemStartDate, setItemStartDate] = useState("");
   const [itemPages, setItemPages] = useState("");
   const [itemIsbn, setitemIsbn] = useState("");
-  const [imageItem, setImageItem] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const numbers = [1, 2, 3, 4, 5];
 
@@ -44,54 +45,83 @@ const BooksModalItem = ({}) => {
 
   const handleBookItem = async () => {
     try {
-      const jsonValue = JSON.stringify([
-        {
-          name: itemName,
-          author: authorName,
-          start: new Date(itemStartDate).toLocaleDateString("en-GB"),
-          finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
+      setIsLoading(true);
+      async function getBookCover() {
+        const url = `https://bookcover.longitood.com/bookcover/${itemIsbn}`;
+        try {
+          const response = await fetch(url);
+          if (response.ok || itemIsbn.length === 0) {
+            const json = await response.json();
 
-          number: pressed ? pressed : undefined,
-          id: new Date() + Math.random(),
-          pages: itemPages,
-          isbn: itemIsbn,
-          image: imageItem,
-          picture: image,
-        },
-        ...bookItem,
-      ]);
+            const jsonValue = JSON.stringify([
+              {
+                name: itemName,
+                author: authorName,
+                start: new Date(itemStartDate).toLocaleDateString("en-GB"),
+                finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
 
-      storeData("bookItem", jsonValue);
+                number: pressed ? pressed : undefined,
+                id: new Date() + Math.random(),
+                pages: itemPages,
+                isbn: itemIsbn,
+                image: json.url,
+                picture: image,
+                type: "book",
+              },
+              ...bookItem,
+            ]);
 
-      toggleModal(), toggleBooks(false);
+            storeData("bookItem", jsonValue);
 
-      const bookItemData = await getData("bookItem");
-      const parsed = JSON.parse(bookItemData);
-      bookItemArray(parsed);
+            toggleModal(), toggleBooks(false);
+
+            const bookItemData = await getData("bookItem");
+            const parsed = JSON.parse(bookItemData);
+            bookItemArray(parsed);
+
+            // imageState(json.url);
+            setWrongInput(false);
+            imageState(null);
+          } else {
+            imageState(null);
+
+            setWrongInput(true);
+            setIsLoading(false);
+          }
+        } catch (error) {
+          imageState(null);
+
+          setIsLoading(false);
+
+          console.error(error.message);
+        }
+      }
+      getBookCover();
     } catch (e) {
+      setIsLoading(false);
+
       console.log(e);
     }
   };
 
-  async function getBookCover() {
-    const url = `https://bookcover.longitood.com/bookcover/${itemIsbn}`;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        setWrongInput(true);
-      } else if (response.ok) {
-        const json = await response.json();
-        imageState(json.url);
-        setWrongInput(false);
-        console.log(json);
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-  if (itemIsbn.length === 17) {
-    getBookCover();
-  }
+  // async function getBookCover() {
+  //   const url = `https://bookcover.longitood.com/bookcover/${itemIsbn}`;
+  //   try {
+  //     const response = await fetch(url);
+  //     if (!response.ok) {
+  //       setWrongInput(true);
+  //     } else if (response.ok) {
+  //       const json = await response.json();
+  //       imageState(json.url);
+  //       setWrongInput(false);
+  //       console.log(json);
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+
+  //     console.error(error.message);
+  //   }
+  // }
 
   return (
     <View>
@@ -202,6 +232,7 @@ const BooksModalItem = ({}) => {
               }}
             >
               <DatePicker
+                style={styles.dateWidth}
                 item={itemStartDate}
                 dateformat={s}
                 text={"start date"}
@@ -211,6 +242,7 @@ const BooksModalItem = ({}) => {
                 }}
               />
               <DatePicker
+                style={styles.dateWidth}
                 item={itemFinishDate}
                 dateformat={f}
                 text={"finish date"}
@@ -417,7 +449,13 @@ const BooksModalItem = ({}) => {
       itemPages.length >= 1 ? (
         <ModalButton
           onPress={() => handleBookItem()}
-          name="add item"
+          name={
+            isLoading ? (
+              <ActivityIndicator size={"large"} color={colors.additionalOne} />
+            ) : (
+              "add item"
+            )
+          }
           fontstyle={{ fontSize: 20 }}
           style={{
             marginBottom: 10,
@@ -453,5 +491,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.outline,
+  },
+  dateWidth: {
+    width:
+      screenWidth > 360 && screenWidth != 448
+        ? 170
+        : screenWidth == 448
+        ? 185
+        : 148,
   },
 });

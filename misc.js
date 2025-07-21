@@ -1,3 +1,5 @@
+import { Dimensions } from "react-native";
+
 const today = new Date();
 const yyyy = today.getFullYear();
 let mm = today.getMonth() + 1;
@@ -16,3 +18,5 @@ export const colors = {
   placeholder: "#d6d6d6",
   additionalOne: "#76ABAE",
 };
+
+export const screenWidth = Dimensions.get("screen").width;

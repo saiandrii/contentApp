@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -9,9 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 
 import ModalButton from "../ModalButton";
-import Ionicons from "@expo/vector-icons/Ionicons";
+
 import { getData, storeData } from "../../AyncStorage";
-import { colors } from "../../misc";
+import { colors, screenWidth } from "../../misc";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import toggleStore from "../../store/toggleStore";
 import itemStore from "../../store/itemStore";
@@ -49,26 +50,36 @@ const MusicModalItem = ({}) => {
         album: itemName,
         size: "medium",
       });
-      const jsonValue = JSON.stringify([
-        {
-          name: itemName,
-          author: authorName,
-          length: itemLength,
-          finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
-          number: pressed,
-          id: new Date() + Math.random(),
-          image: res,
-        },
-        ...musicItem,
-      ]);
 
-      storeData("musicItem", jsonValue);
+      if (typeof res != undefined) {
+        const jsonValue = JSON.stringify([
+          {
+            name: itemName,
+            author: authorName,
+            length: itemLength,
+            finish: new Date(itemFinishDate).toLocaleDateString("en-GB"),
+            number: pressed,
+            id: new Date() + Math.random(),
+            image: res,
+            type: "music",
+          },
+          ...musicItem,
+        ]);
 
-      const musicItemData = await getData("musicItem");
-      const parsed = JSON.parse(musicItemData);
-      musicState(parsed);
-      toggleModal();
-      setIsLoading(false);
+        storeData("musicItem", jsonValue);
+
+        const musicItemData = await getData("musicItem");
+        const parsed = JSON.parse(musicItemData);
+        musicState(parsed);
+        toggleModal();
+        setIsLoading(false);
+      } else {
+        Alert.alert(
+          "There is a problem!",
+          "Check if the name of song or author is correct, or check your internet conneciton."
+        );
+        setIsLoading(false);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -181,7 +192,7 @@ const MusicModalItem = ({}) => {
                   backgroundColor: colors.itembg,
                   justifyContent: "center",
                   alignItems: "center",
-                  width: "30%",
+                  width: screenWidth >= 448 ? "35%" : "30%",
                   height: 60,
                   borderRadius: 10,
                 }}
@@ -210,9 +221,13 @@ const MusicModalItem = ({}) => {
                   }}
                 />
               </View>
+
               <View style={{ left: 4 }}>
                 <DatePicker
-                  style={{ height: 60, width: 195 }}
+                  style={{
+                    height: 60,
+                    width: screenWidth > 360 ? 225 : 195,
+                  }}
                   textStyle={{
                     display: "none",
                   }}

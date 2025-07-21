@@ -95,8 +95,12 @@ const FilmsItem = () => {
         }}
       >
         <Text
-          android_hyphenationFrequency="full"
-          style={{ fontSize: 16, fontStyle: "italic", alignSelf: "flex-start" }}
+          style={{
+            fontSize: 16,
+            fontStyle: "italic",
+            alignSelf: "flex-start",
+            textAlign: "center",
+          }}
         >
           {pickedFilmItem?.description}
         </Text>

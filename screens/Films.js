@@ -1,10 +1,11 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import itemStore from "../store/itemStore";
 import { useEffect } from "react";
-import { getData } from "../AyncStorage";
+import { getData, storeData } from "../AyncStorage";
 import FilmsList from "../components/FilmsComponent/FilmsList";
 import FilmsGrid from "../components/FilmsComponent/FilmsGrid";
 import FilmsModalCard from "../components/FilmsComponent/FilmsModalCard";
+import { formattedToday } from "../misc";
 
 const Films = () => {
   const { filmItem, filmState } = itemStore();
@@ -28,6 +29,9 @@ const Films = () => {
             ...filmItem,
           ]);
           await storeData("filmItem", jsonValue);
+          const filmItemData = await getData("filmItem");
+          const parsed = JSON.parse(filmItemData);
+          filmState(parsed);
         } catch (e) {
           console.log(e);
         }
@@ -50,7 +54,10 @@ const Films = () => {
         numColumns={2}
         contentContainerStyle={{
           paddingTop: 95,
-          paddingBottom: 25,
+          paddingBottom: 35,
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
         }}
         showsVerticalScrollIndicator={false}
         data={filmItem}

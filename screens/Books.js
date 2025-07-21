@@ -30,15 +30,18 @@ const Books = ({ navigation }) => {
           const jsonValue = JSON.stringify([
             {
               name: "This is your first book item",
-              author: "Tap on me to delete",
-              length: "00:00",
-              finish: formattedToday,
+              author: "Press on dots to delete me",
+              pages: "73",
+              start: formattedToday,
               number: "5",
               id: new Date() + Math.random(),
             },
             ...bookItem,
           ]);
           await storeData("bookItem", jsonValue);
+          const bookItemData = await getData("bookItem");
+          const parsed = JSON.parse(bookItemData);
+          bookItemArray(parsed);
         } catch (e) {
           console.log(e);
         }

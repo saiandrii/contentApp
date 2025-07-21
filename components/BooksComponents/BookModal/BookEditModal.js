@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import ModalButton from "../../ModalButton";
 import { getData } from "../../../AyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { colors } from "../../../misc";
+import { colors, screenWidth } from "../../../misc";
 
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DatePicker from "../../DatePicker";
@@ -28,7 +28,6 @@ const BookEditModal = ({ item }) => {
 
   const [itemName, setItemName] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [itemLength, setitemLength] = useState("");
   const [itemFinishDate, setItemFinishDate] = useState("");
   const [itemStartDate, setItemStartDate] = useState("");
   const [itemPages, setItemPages] = useState("");
@@ -65,7 +64,7 @@ const BookEditModal = ({ item }) => {
       itemToUpdate.isbn = itemIsbn.length <= 0 ? itemToUpdate.isbn : itemIsbn;
 
       itemToUpdate.pages =
-        itemLength.length <= 0 ? itemToUpdate.pages : itemLength;
+        itemPages.length == 0 ? itemToUpdate.pages : itemPages;
 
       itemToUpdate.start = itemStartDate.length <= 0 ? itemToUpdate.start : s;
 
@@ -75,6 +74,11 @@ const BookEditModal = ({ item }) => {
 
       itemToUpdate.number =
         itemToUpdate.number === pressed ? itemToUpdate.number : pressed;
+
+      itemToUpdate?.image
+        ? itemToUpdate?.image
+        : itemToUpdate?.picture && imageState(itemToUpdate?.picture);
+
       itemToUpdate.picture = image;
 
       const jsonValue = JSON.stringify(bookItem);
@@ -84,7 +88,6 @@ const BookEditModal = ({ item }) => {
 
       bookItemArray(parsed);
       toggleEditModal(false);
-      imageState();
     } catch (e) {
       console.log(e);
     }
@@ -158,6 +161,7 @@ const BookEditModal = ({ item }) => {
                 maxLength={60}
                 numberOfLines={1}
                 style={{
+                  width: "100%",
                   paddingHorizontal: 20,
                   fontSize: 18,
                   fontWeight: "bold",
@@ -197,6 +201,7 @@ const BookEditModal = ({ item }) => {
                 numberOfLines={2}
                 multiline
                 style={{
+                  width: "100%",
                   fontWeight: "bold",
                   color: "white",
                   paddingHorizontal: 20,
@@ -214,15 +219,17 @@ const BookEditModal = ({ item }) => {
               }}
             >
               <DatePicker
+                style={styles.dateWidth}
                 item={itemStartDate}
                 dateformat={s}
-                text={bookItemData?.start}
+                text={bookItemData?.start ? bookItemData?.start : "start date"}
                 onPress={() => {
                   setShowPicker(!showPicker);
                   setStart(!start);
                 }}
               />
               <DatePicker
+                style={styles.dateWidth}
                 item={itemFinishDate}
                 dateformat={f}
                 text={
@@ -276,7 +283,9 @@ const BookEditModal = ({ item }) => {
                     setItemPages(text);
                   }}
                   keyboardType="numeric"
-                  placeholder={bookItemData?.pages}
+                  placeholder={
+                    bookItemData?.pages ? bookItemData?.pages : "pages..."
+                  }
                   placeholderTextColor={colors.placeholder}
                   maxLength={5}
                   style={{
@@ -295,7 +304,6 @@ const BookEditModal = ({ item }) => {
                 style={{
                   backgroundColor: colors.itembg,
 
-                  width: "26.25%",
                   height: 60,
                   borderRadius: 10,
                   marginTop: 70,
@@ -440,5 +448,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.outline,
+  },
+  dateWidth: {
+    width:
+      screenWidth > 360 && screenWidth != 448
+        ? 170
+        : screenWidth == 448
+        ? 185
+        : 148,
   },
 });

@@ -24,7 +24,7 @@ const PicturePicker = () => {
 
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={pickImage}>
-      {typeof image != "undefined" ? (
+      {image != null ? (
         <FontAwesome name="check" size={24} color={colors.additionalOne} />
       ) : (
         <FontAwesome name="photo" size={20} color="#eeeeee" />
